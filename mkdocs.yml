@@ -1,0 +1,69 @@
+site_name: QuestI0 - Tutoriais
+site_description: Tutoriais básicos para o desenvolvimento de hardware  
+site_url: https://tutoriais.vlab.dc.ufscar.br
+site_author: Ricardo Menotti
+repo_url: https://github.com/QuestIO42/tutoriais
+repo_name: QuestIO42/tutoriais
+
+theme:
+  language: pt-BR
+  icon:
+    logo: fontawesome/solid/microchip
+  font:
+    text: Merriweather Sans
+    code: Roboto Mono
+  name: material
+  palette:
+    # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: dark blue
+      accent: deep purple
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: cyan
+      accent: deep orange
+  features:
+    - navigation.footer
+    - content.footnote.tooltips    
+
+extra:
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/QuestIO42
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/questio42/
+
+markdown_extensions:
+  - footnotes
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+      linenums: true
+      use_pygments: true
+  - pymdownx.snippets:
+      base_path: !relative $docs_dir
+  - pymdownx.magiclink
+  - pymdownx.saneheaders
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+copyright: |
+  &copy; 2025 <a href="https://www.vlab.dc.ufscar.br"  target="_blank" rel="noopener">QuestI0</a>
