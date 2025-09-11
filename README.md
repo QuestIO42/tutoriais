@@ -2,6 +2,8 @@
 
 [Neste site](https://www.vlab.dc.ufscar.br/tutoriais/) você encontrará tutoriais básicos para o desenvolvimento de hardware. Este tema pode ser complexo para muitas pessoas e a documentação das ferramentas nem sempre é muito organizada. O objetivo aqui não é esgotar os assuntos, mas oferecer os primeiros passos aos iniciantes. 
 
+Presume-se aqui conhecimentos básicos de lógica digital e arquitetura de computadores. Se você acha que não tem *background* suficiente no assunto para começar, dê uma olhada antes no [Curso de Lógica Digital](https://menotti.pro.br/ld/) do Prof. Menotti que inclui também um [*playlist* sobre Verilog](https://www.youtube.com/playlist?list=PLhaFCmjMNuYZ542h5JCDsUDxsgZbWtFTI). 
+
 ## Contribuições 
 
 !!! note 
