@@ -11,6 +11,11 @@ nav:
     - Apresentação: index.md
     - Verilog HDL: HDL.md
     - Simulações: Sim.md
+    - Chisel:
+        - Introdução: chisel/introducao.md
+        - Chisel: chisel/chisel-info.md
+        - Motivação: chisel/motivacao.md
+        - Somadores e Subtratores: chisel/somadores.md
     - FPGA: FPGA.md
     - RISC-V: RISCV.md
   - Equipe: 'https://vlab.dc.ufscar.br/equipe.html'
@@ -75,6 +80,11 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 copyright: |
   &copy; 2025 <a href="https://www.vlab.dc.ufscar.br"  target="_blank" rel="noopener">QuestI0</a>
