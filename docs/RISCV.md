@@ -8,9 +8,9 @@ Os processadores RISC (*Reduced Instruction Set Computer*) possuem instruções 
 
 - Instruções e Dados podem estar na mesma memória ([von Neumann](https://pt.wikipedia.org/wiki/Arquitetura_de_von_Neumann)) ou em memórias separadas ([Harvard](https://pt.wikipedia.org/wiki/Arquitetura_Harvard)) como no diagrama a seguir.
 - Operações lógicas e artiméticas possuem três operandos em registradores e são executadas na ALU (*Arithmetic Logic Unit*);
-    * Instruções do tipo R recebem dois registradores (`rs1` e `rs2`) como entrada e gravam o resultado em um terceiro (`rd`); 
-    * Instruções do tipo I recebem um registador apenas (`rs1`) e um imediado codificado na própria instrução como entrada. 
-- Instruções LOAD/STORE são usadas para trazer/levar dados da/para a memória;
+    * Instruções do **Tipo R** recebem dois registradores (`rs1` e `rs2`) como entrada e gravam o resultado em um terceiro (`rd`); 
+    * Instruções do **Tipo I** recebem um registador apenas (`rs1`) e um imediato codificado na própria instrução como entrada. 
+- Instruções **Load** / **Store** são usadas para trazer / levar dados da / para a memória;
 
 ```mermaid
 flowchart TD
@@ -58,7 +58,7 @@ module regfile(
 endmodule
 ```
 
-Note que o registrado 0 (zero) é sempre zero, mas nesta implementação isso é tratado nas leituras ao invés da escrita. 
+Note que o registrador 0 (zero) é sempre zero, mas nesta implementação isso é tratado nas leituras ao invés da escrita. 
 
 Se você quer se aprofundar na construção de um processador RISC-V, sugerimos este [excelente tutorial](https://github.com/BrunoLevy/learn-fpga/blob/master/FemtoRV/TUTORIALS/FROM_BLINKER_TO_RISCV/) do Prof. Bruno Levy.
 
