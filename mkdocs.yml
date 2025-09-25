@@ -9,13 +9,14 @@ nav:
   - Portal: 'https://vlab.dc.ufscar.br'
   - Tutoriais: 
     - Apresentação: index.md
-    - Verilog HDL: HDL.md
-    - Simulações: Sim.md
-    - Chisel:
+    - HDL:
+      - Verilog: HDL.md
+      - Chisel: 
         - Introdução: chisel/introducao.md
         - Chisel: chisel/chisel-info.md
         - Motivação: chisel/motivacao.md
         - Somadores e Subtratores: chisel/somadores.md
+    - Simulações: Sim.md
     - FPGA: FPGA.md
     - RISC-V: RISCV.md
   - Equipe: 'https://vlab.dc.ufscar.br/equipe.html'
@@ -45,6 +46,16 @@ theme:
       accent: deep orange
   features:
     - navigation.footer
+    - navigation.indexes
+    # - navigation.instant
+    # - navigation.instant.prefetch
+    # - navigation.instant.progress
+    # - navigation.prune
+    - navigation.sections
+    - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
     - content.footnote.tooltips    
 
 extra:
