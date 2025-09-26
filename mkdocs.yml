@@ -24,13 +24,13 @@ nav:
   - Equipe: 'https://vlab.dc.ufscar.br/equipe.html'
 
 theme:
+  name: material
   language: pt-BR
   icon:
     logo: fontawesome/solid/microchip
   font:
     text: Merriweather Sans
     code: Roboto Mono
-  name: material
   palette:
     # Dark Mode
     - scheme: slate
@@ -100,4 +100,4 @@ extra_javascript:
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 copyright: |
-  &copy; 2025 <a href="https://www.vlab.dc.ufscar.br"  target="_blank" rel="noopener">QuestI0</a>
+  &copy; 2025 <a href="https://vlab.dc.ufscar.br"  target="_blank" rel="noopener">QuestI0</a>
