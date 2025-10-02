@@ -47,6 +47,7 @@ Para instalar o SpinalHDL, você precisará ter o Scala e o SBT (Scala Build Too
 
 ## Fundamentos da Sintaxe
 A sintaxe do SpinalHDL é baseada em Scala, o que significa que você pode usar todas as funcionalidades da linguagem Scala ao escrever seu código de hardware. Aqui estão alguns conceitos básicos da sintaxe do SpinalHDL:
+
 1. **Componentes**: Em SpinalHDL, um componente é uma unidade básica de design de hardware. Você define um componente criando uma classe que estende a classe `Component`.
    ```scala
    class MeuComponente extends Component {
@@ -64,13 +65,11 @@ A sintaxe do SpinalHDL é baseada em Scala, o que significa que você pode usar 
    val meuSInt = SInt(16 bits) // Inteiro com sinal de 16 bits
    val meuBits = Bits(4 bits)  // Vetor de bits de 4 bits
    ```
-   
 4. **Atribuições**: As atribuições em SpinalHDL são feitas usando o operador `:=`. Você pode atribuir valores às portas e sinais dentro do seu componente.
    ```scala
    saida := entrada  // Atribui o valor da entrada à saída
    ```
 O operador `=` é usado para atribuições de valor em variáveis, enquanto `:=` é usado para atribuições em circuitos digitais, onde a ordem das operações e a propagação de sinais são importantes. O uso de `:=` deixa claro que estamos lidando com lógica de hardware, onde as atribuições podem ser sensíveis ao tempo e à ordem de execução.
-
 5. **Bundles**: Bundles são usados para agrupar várias portas ou sinais em uma única unidade. Você pode definir um Bundle criando uma classe que estende a classe `Bundle`.
    ```scala
    class MeuBundle extends Bundle {
@@ -122,252 +121,279 @@ O operador `=` é usado para atribuições de valor em variáveis, enquanto `:=`
 ## Criando os Primeiros Módulos
 
 ### Adder Parametrizavel Simples
-```scala
-import spinal.core._
+=== "SpinalHDL"
 
-class AdderParametrizavel(val largura: Int) extends Component {
-  val io = new Bundle {
-    val a = in UInt(largura bits)
-    val b = in UInt(largura bits)
-    val soma = out UInt(largura bits)
-  }
+    ```scala
+    import spinal.core._
 
-  io.soma := io.a + io.b
-}
-```
+    class AdderParametrizavel(val largura: Int) extends Component {
+      val io = new Bundle {
+        val a = in UInt(largura bits)
+        val b = in UInt(largura bits)
+        val soma = out UInt(largura bits)
+      }
+
+      io.soma := io.a + io.b
+    }
+    ```
+
+=== "Verilog"
+
+    ```verilog
+    module AdderParametrizavel #(
+      parameter LARGURA = 8  // Parâmetro para largura
+    )(
+      input  wire [LARGURA-1:0] a,
+      input  wire [LARGURA-1:0] b,
+      output wire [LARGURA-1:0] soma
+    );
+      
+      assign soma = a + b;
+      
+    endmodule
+    ```
+
 - `class AdderParametrizavel(val largura: Int) extends Component`: Define um componente chamado `AdderParametrizavel` que é parametrizado pela largura dos sinais de entrada e saída.
-- `val io = new Bundle { ... }`: Cria um bundle de entradas e saídas para o componente.
-- `io.soma := io.a + io.b`: Define a lógica do somador, que é a soma das entradas `a` e `b`.
-#### Como esse modulo seria em Verilog
 
-```verilog
-module AdderParametrizavel #(
-  parameter LARGURA = 8  // Parâmetro para largura
-)(
-  input  wire [LARGURA-1:0] a,
-  input  wire [LARGURA-1:0] b,
-  output wire [LARGURA-1:0] soma
-);
-  
-  assign soma = a + b;
-  
-endmodule
-```
+- `val io = new Bundle { ... }`: Cria um bundle de entradas e saídas para o componente.
+
+- `io.soma := io.a + io.b`: Define a lógica do somador, que é a soma das entradas `a` e `b`.
 
 ### ULA Simples
-```scala
-import spinal.core._
-class UlaSimples(val largura: Int) extends Component {
-  val io = new Bundle {
-    val a = in UInt(largura bits)
-    val b = in UInt(largura bits)
-    val operacao = in UInt(2 bits) // 00: add, 01: sub, 10: and, 11: or
-    val resultado = out UInt(largura bits)
-  }
 
-  io.resultado := 0.U // Funciona como valor padrão
+=== "SpinalHDL"
 
-  switch(io.operacao) {
-    is(0.U) { io.resultado := io.a + io.b } // Adição
-    is(1.U) { io.resultado := io.a - io.b } // Subtração
-    is(2.U) { io.resultado := io.a & io.b } // AND
-    is(3.U) { io.resultado := io.a | io.b } // OR
-  }
-}
-```
+    ```scala
+    import spinal.core._
+    class UlaSimples(val largura: Int) extends Component {
+      val io = new Bundle {
+        val a = in UInt(largura bits)
+        val b = in UInt(largura bits)
+        val operacao = in UInt(2 bits) // 00: add, 01: sub, 10: and, 11: or
+        val resultado = out UInt(largura bits)
+      }
+
+      io.resultado := 0.U // Funciona como valor padrão
+
+      switch(io.operacao) {
+        is(0.U) { io.resultado := io.a + io.b } // Adição
+        is(1.U) { io.resultado := io.a - io.b } // Subtração
+        is(2.U) { io.resultado := io.a & io.b } // AND
+        is(3.U) { io.resultado := io.a | io.b } // OR
+      }
+    }
+    ```
+
+=== "Verilog"
+
+    ```verilog
+    module UlaSimples #(
+      parameter LARGURA = 8  // Parâmetro para largura
+    )(
+      input  wire [LARGURA-1:0] a,
+      input  wire [LARGURA-1:0] b,
+      input  wire [1:0] operacao,
+      output reg  [LARGURA-1:0] resultado
+    );
+
+    always @(*) begin
+      case (operacao)
+        2'b00: resultado = a + b; // Adição
+        2'b01: resultado = a - b; // Subtração
+        2'b10: resultado = a & b; // AND
+        2'b11: resultado = a | b; // OR
+        default: resultado = 0;
+      endcase
+    end
+
+    endmodule
+    ```
+
 - `class UlaSimples(val largura: Int) extends Component`: Define um componente chamado `UlaSimples` que é parametrizado pela largura dos sinais de entrada e saída.
+
 - `val io = new Bundle { ... }`: Cria um bundle de entradas e saídas para o componente.
+
 - `switch(io.operacao) { ... }`: Implementa a lógica da ULA, realizando diferentes operações com base no valor da entrada `operacao`.
 
-#### Como esse modulo seria em Verilog
-
-```verilog
-module UlaSimples #(
-  parameter LARGURA = 8  // Parâmetro para largura
-)(
-  input  wire [LARGURA-1:0] a,
-  input  wire [LARGURA-1:0] b,
-  input  wire [1:0] operacao,
-  output reg  [LARGURA-1:0] resultado
-);
-
-always @(*) begin
-  case (operacao)
-    2'b00: resultado = a + b; // Adição
-    2'b01: resultado = a - b; // Subtração
-    2'b10: resultado = a & b; // AND
-    2'b11: resultado = a | b; // OR
-    default: resultado = 0;
-  endcase
-end
-
-endmodule
-```
 ### Registrador com Enable e Reset
-```scala
-import spinal.core._
+=== "SpinalHDL"
 
-class RegistradorComEnableReset(val largura: Int) extends Component {
-  val io = new Bundle {
-    val d = in UInt(largura bits)
-    val clk = in Bool()
-    val reset = in Bool()
-    val enable = in Bool()
-    val q = out UInt(largura bits)
-  }
+    ```scala
+    import spinal.core._
 
-  io.q := 0.U
+    class RegistradorComEnableReset(val largura: Int) extends Component {
+      val io = new Bundle {
+        val d = in UInt(largura bits)
+        val clk = in Bool()
+        val reset = in Bool()
+        val enable = in Bool()
+        val q = out UInt(largura bits)
+      }
 
-  when(io.reset) {
-    io.q := 0.U
-  } .elsewhen(io.enable) {
-    io.q := io.d
-  }
-}
-```
+      io.q := 0.U
+
+      when(io.reset) {
+        io.q := 0.U
+      } .elsewhen(io.enable) {
+        io.q := io.d
+      }
+    }
+    ```
+=== "Verilog"
+
+    ```verilog
+    module RegistradorComEnableReset #(
+      parameter LARGURA = 8  // Parâmetro para largura
+    )(
+      input  wire [LARGURA-1:0] d,
+      input  wire clk,
+      input  wire reset,
+      input  wire enable,
+      output reg  [LARGURA-1:0] q
+    );
+
+    always @(posedge clk or posedge reset) begin
+      if (reset) begin
+        q <= 0;
+      end else if (enable) begin
+        q <= d;
+      end
+    end
+
+    endmodule
+    ```
+
 - `class RegistradorComEnableReset(val largura: Int) extends Component`: Define um componente chamado `RegistradorComEnableReset` que é parametrizado pela largura dos sinais de entrada e saída.
+
 - `val io = new Bundle { ... }`: Cria um bundle de entradas e saídas para o componente.
+
 - `when(io.reset) { ... } .elsewhen(io.enable) { ... }`: Implementa a lógica do registrador, que pode ser resetado ou atualizado com o valor de `d` quando `enable` está ativo.
-#### Como esse modulo seria em Verilog
 
-```verilog
-module RegistradorComEnableReset #(
-  parameter LARGURA = 8  // Parâmetro para largura
-)(
-  input  wire [LARGURA-1:0] d,
-  input  wire clk,
-  input  wire reset,
-  input  wire enable,
-  output reg  [LARGURA-1:0] q
-);
 
-always @(posedge clk or posedge reset) begin
-  if (reset) begin
-    q <= 0;
-  end else if (enable) begin
-    q <= d;
-  end
-end
-
-endmodule
-```
 
 ## Criando Maquina de Estados Finitos (FSM)
 A maquina de estados apresenta 6 estados (A, B, C, D, E, F) e 3 entradas de controle (start, stop, back). A transição entre os estados é controlada pelas entradas de controle da seguinte forma: 001 (start) move para o próximo estado, 010 ou 011 (stop) mantém o estado atual, e 100 (back) retorna ao estado anterior. A saída da FSM é o estado atual representado por um número de 3 bits (1 a 6).
 
-```scala
-import spinal.core._
+=== "SpinalHDL"
 
-class FsmABCF extends Component {
-  val io = new Bundle {
-    val ctrl   = in UInt(3 bits)   // sinal de controle
-    val estado = out UInt(3 bits)  // saída (1..6)
-  }
+    ```scala
+    import spinal.core._
 
-  // Registrador de estado, inicia no A (1)
-  val estadoReg = RegInit(U(1, 3 bits))
+    class FsmABCF extends Component {
+      val io = new Bundle {
+        val ctrl   = in UInt(3 bits)   // sinal de controle
+        val estado = out UInt(3 bits)  // saída (1..6)
+      }
 
-  switch(estadoReg) {
-    is(U(1)) { // Estado A
-      when(io.ctrl === U"3'b001") { estadoReg := U(2) }   // start -> B
-      when(io.ctrl === U"3'b100") { estadoReg := U(1) }   // back -> fica em A
-    }
-    is(U(2)) { // Estado B
-      when(io.ctrl === U"3'b001") { estadoReg := U(3) }   // start -> C
-      when(io.ctrl === U"3'b100") { estadoReg := U(1) }   // back -> A
-    }
-    is(U(3)) { // Estado C
-      when(io.ctrl === U"3'b001") { estadoReg := U(4) }   // start -> D
-      when(io.ctrl === U"3'b100") { estadoReg := U(2) }   // back -> B
-    }
-    is(U(4)) { // Estado D
-      when(io.ctrl === U"3'b001") { estadoReg := U(5) }   // start -> E
-      when(io.ctrl === U"3'b100") { estadoReg := U(3) }   // back -> C
-    }
-    is(U(5)) { // Estado E
-      when(io.ctrl === U"3'b001") { estadoReg := U(6) }   // start -> F
-      when(io.ctrl === U"3'b100") { estadoReg := U(4) }   // back -> D
-    }
-    is(U(6)) { // Estado F
-      when(io.ctrl === U"3'b001") { estadoReg := U(6) }   // já é o último, fica
-      when(io.ctrl === U"3'b100") { estadoReg := U(5) }   // back -> E
-    }
-  }
+      // Registrador de estado, inicia no A (1)
+      val estadoReg = RegInit(U(1, 3 bits))
 
-  // stop (010 ou 011) = não faz nada -> mantém estado
-  io.estado := estadoReg
-}
+      switch(estadoReg) {
+        is(U(1)) { // Estado A
+          when(io.ctrl === U"3'b001") { estadoReg := U(2) }   // start -> B
+          when(io.ctrl === U"3'b100") { estadoReg := U(1) }   // back -> fica em A
+        }
+        is(U(2)) { // Estado B
+          when(io.ctrl === U"3'b001") { estadoReg := U(3) }   // start -> C
+          when(io.ctrl === U"3'b100") { estadoReg := U(1) }   // back -> A
+        }
+        is(U(3)) { // Estado C
+          when(io.ctrl === U"3'b001") { estadoReg := U(4) }   // start -> D
+          when(io.ctrl === U"3'b100") { estadoReg := U(2) }   // back -> B
+        }
+        is(U(4)) { // Estado D
+          when(io.ctrl === U"3'b001") { estadoReg := U(5) }   // start -> E
+          when(io.ctrl === U"3'b100") { estadoReg := U(3) }   // back -> C
+        }
+        is(U(5)) { // Estado E
+          when(io.ctrl === U"3'b001") { estadoReg := U(6) }   // start -> F
+          when(io.ctrl === U"3'b100") { estadoReg := U(4) }   // back -> D
+        }
+        is(U(6)) { // Estado F
+          when(io.ctrl === U"3'b001") { estadoReg := U(6) }   // já é o último, fica
+          when(io.ctrl === U"3'b100") { estadoReg := U(5) }   // back -> E
+        }
+      }
 
-```
+      // stop (010 ou 011) = não faz nada -> mantém estado
+      io.estado := estadoReg
+    }
+
+    ```
+
+=== "Verilog"
+
+    ```verilog
+    module FsmABCF (
+        input  wire       clk,
+        input  wire       reset,    // reset síncrono
+        input  wire [2:0] ctrl,     // 001=start, 010/011=stop, 100=back
+        output reg  [2:0] estado
+    );
+
+      // Definição dos estados (codificação binária simples)
+      localparam A = 3'b001;
+      localparam B = 3'b010;
+      localparam C = 3'b011;
+      localparam D = 3'b100;
+      localparam E = 3'b101;
+      localparam F = 3'b110;
+
+      // Registrador de estado
+      reg [2:0] estado_reg, estado_next;
+
+      // Lógica de transição combinacional
+      always @(*) begin
+        estado_next = estado_reg; // padrão = mantém
+        case (estado_reg)
+          A: begin
+            if (ctrl == 3'b001) estado_next = B; // start -> B
+            else if (ctrl == 3'b100) estado_next = A; // back -> fica
+          end
+          B: begin
+            if (ctrl == 3'b001) estado_next = C; // start -> C
+            else if (ctrl == 3'b100) estado_next = A; // back -> A
+          end
+          C: begin
+            if (ctrl == 3'b001) estado_next = D; // start -> D
+            else if (ctrl == 3'b100) estado_next = B; // back -> B
+          end
+          D: begin
+            if (ctrl == 3'b001) estado_next = E; // start -> E
+            else if (ctrl == 3'b100) estado_next = C; // back -> C
+          end
+          E: begin
+            if (ctrl == 3'b001) estado_next = F; // start -> F
+            else if (ctrl == 3'b100) estado_next = D; // back -> D
+          end
+          F: begin
+            if (ctrl == 3'b001) estado_next = F; // já é o último
+            else if (ctrl == 3'b100) estado_next = E; // back -> E
+          end
+          default: estado_next = A; // segurança
+        endcase
+      end
+
+      // Atualização do estado (flip-flop com reset síncrono)
+      always @(posedge clk) begin
+        if (reset)
+          estado_reg <= A;
+        else
+          estado_reg <= estado_next;
+      end
+
+      // Saída = estado atual
+      always @(*) begin
+        estado = estado_reg;
+      end
+
+    endmodule
+    ```
 - `class FsmABCF extends Component`: Define um componente chamado `FsmABCF`.
+
 - `val io = new Bundle { ... }`: Cria um bundle de entradas e saídas para o componente.
+
 - `val estadoReg = RegInit(U(1, 3 bits))`: Declara um registrador de estado inicializado para o estado A (1).
+
 - `switch(estadoReg) { ... }`: Implementa a lógica da máquina de estados, definindo as transições entre os estados com base na entrada `ctrl`.
 
-#### Como esse modulo seria em Verilog
-```verilog
-module FsmABCF (
-    input  wire       clk,
-    input  wire       reset,    // reset síncrono
-    input  wire [2:0] ctrl,     // 001=start, 010/011=stop, 100=back
-    output reg  [2:0] estado
-);
-
-  // Definição dos estados (codificação binária simples)
-  localparam A = 3'b001;
-  localparam B = 3'b010;
-  localparam C = 3'b011;
-  localparam D = 3'b100;
-  localparam E = 3'b101;
-  localparam F = 3'b110;
-
-  // Registrador de estado
-  reg [2:0] estado_reg, estado_next;
-
-  // Lógica de transição combinacional
-  always @(*) begin
-    estado_next = estado_reg; // padrão = mantém
-    case (estado_reg)
-      A: begin
-        if (ctrl == 3'b001) estado_next = B; // start -> B
-        else if (ctrl == 3'b100) estado_next = A; // back -> fica
-      end
-      B: begin
-        if (ctrl == 3'b001) estado_next = C; // start -> C
-        else if (ctrl == 3'b100) estado_next = A; // back -> A
-      end
-      C: begin
-        if (ctrl == 3'b001) estado_next = D; // start -> D
-        else if (ctrl == 3'b100) estado_next = B; // back -> B
-      end
-      D: begin
-        if (ctrl == 3'b001) estado_next = E; // start -> E
-        else if (ctrl == 3'b100) estado_next = C; // back -> C
-      end
-      E: begin
-        if (ctrl == 3'b001) estado_next = F; // start -> F
-        else if (ctrl == 3'b100) estado_next = D; // back -> D
-      end
-      F: begin
-        if (ctrl == 3'b001) estado_next = F; // já é o último
-        else if (ctrl == 3'b100) estado_next = E; // back -> E
-      end
-      default: estado_next = A; // segurança
-    endcase
-  end
-
-  // Atualização do estado (flip-flop com reset síncrono)
-  always @(posedge clk) begin
-    if (reset)
-      estado_reg <= A;
-    else
-      estado_reg <= estado_next;
-  end
-
-  // Saída = estado atual
-  always @(*) begin
-    estado = estado_reg;
-  end
-
-endmodule
-```

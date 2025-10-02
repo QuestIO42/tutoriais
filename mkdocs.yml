@@ -1,27 +1,28 @@
-site_name: 'QuestI0 : Tutoriais'
-site_description: Tutoriais básicos para o desenvolvimento de hardware  
+site_name: "QuestI0 : Tutoriais"
+site_description: Tutoriais básicos para o desenvolvimento de hardware
 site_url: https://tutoriais.vlab.dc.ufscar.br
 site_author: QuestIO team
 repo_url: https://github.com/QuestIO42/tutoriais
 repo_name: QuestIO42/tutoriais
 
 nav:
-  - Home: 'https://vlab.dc.ufscar.br'
-  - QuestI0: 'https://questio.vlab.dc.ufscar.br/'
-  - Tutoriais: 
-    - Apresentação: index.md
-    - HDL:
-      - Verilog: HDL.md
-      - Chisel: 
-        - Introdução: chisel/introducao.md
-        - Chisel: chisel/chisel-info.md
-        - Motivação: chisel/motivacao.md
-        - Somadores e Subtratores: chisel/somadores.md
-    - Simulações: Sim.md
-    - FPGA: FPGA.md
-    - RISC-V: RISCV.md
-  - VLAB: 'https://legacy.vlab.dc.ufscar.br'
-  - Equipe: 'https://vlab.dc.ufscar.br/equipe.html'
+  - Home: "https://vlab.dc.ufscar.br"
+  - QuestI0: "https://questio.vlab.dc.ufscar.br/"
+  - Tutoriais:
+      - Apresentação: index.md
+      - HDL:
+          - Verilog: HDL.md
+          - Chisel:
+              - Introdução: chisel/introducao.md
+              - Chisel: chisel/chisel-info.md
+              - Motivação: chisel/motivacao.md
+              - Somadores e Subtratores: chisel/somadores.md
+          - Spinal: spinalHDL.md
+      - Simulações: Sim.md
+      - FPGA: FPGA.md
+      - RISC-V: RISCV.md
+  - VLAB: "https://legacy.vlab.dc.ufscar.br"
+  - Equipe: "https://vlab.dc.ufscar.br/equipe.html"
 
 theme:
   name: material
@@ -58,7 +59,7 @@ theme:
     # - navigation.tabs.sticky
     - navigation.top
     - navigation.tracking
-    - content.footnote.tooltips    
+    - content.footnote.tooltips
 
 extra:
   analytics:
