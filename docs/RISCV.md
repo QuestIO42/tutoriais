@@ -68,6 +68,116 @@ Se você quer se aprofundar na construção de um processador RISC-V, sugerimos 
 
 ### Litex
 
+O framework LiteX fornece uma infraestrutura conveniente e eficiente para criar núcleos/SoCs FPGA e criar sistemas completos baseados em FPGA.
+
+O LiteX fornece todos os componentes comuns necessários para criar facilmente um núcleo/SoC FPGA:
+
+- Barramentos e fluxos (Wishbone, AXI, Avalon-ST) e suas interconexões.
+- Núcleos simples: RAM, ROM, Timer, UART, JTAG, etc.
+- Núcleos complexos através do ecossistema de núcleos: LiteDRAM, LitePCIe, LiteEth, LiteSATA, etc...
+- Suporte a linguagens mistas com recursos de integração VHDL/Verilog/(n)Migen/Spinal-HDL/etc...
+- Infraestrutura de depuração poderosa através de diversas pontes e Litescope.
+- Simulação direta/rápida através do Verilator.
+- Construir backends para cadeias de ferramentas de código aberto e de fornecedores.
+- SoC Linux multinúcleo baseado em CPU VexRiscv-SMP, LiteDRAM e LiteSATA, construído e integrado com LiteX.
+
+Para instalar o litex basta executar:
+
+```sh
+python3 -m venv litex-env
+source litex-env/bin/activate
+pip3 install ninja meson
+```
+
+```sh
+mkdir litex && cd litex
+wget https://raw.githubusercontent.com/enjoy-digital/litex/master/litex_setup.py
+chmod +x litex_setup.py
+./litex_setup.py --init --install --config standard
+```
+
+Para trabalhar com códigos RISC-V é preciso instalar a toolchain:
+```sh
+git clone https://github.com/riscv/riscv-gnu-toolchain && cd riscv-gnu-toolchain
+sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip python3-tomli libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
+./configure --prefix=/opt/riscv --enable-multilib --enable-newlib --enable-linux --enable-debug-info --with-arch=rv32gc --with-abi=ilp32d
+make -j $(nproc) && sudo make install
+```
+
+No exemplo que se segue vamos usar o `VexRiscv` uma derivação do `NaxRiscv`, para isso temos que instalar o `verilator`, `sbt` e o `openjdk`:
+```sh
+git clone https://github.com/SpinalHDL/NaxRiscv.git --recursive
+cd NaxRiscv
+export NAXRISCV=${PWD}
+make install-toolchain
+```
+
+Basta configurar a env `PATH` corretamente e estamos prontos para executar uma simulação:
+
+Executando `litex_sim --help` diversas opções interessantes podem ser encontradas para configuração do SoC:
+
+Para executar uma simulação vamos executar:
+```sh
+# 
+litex_sim --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --no-compile-gateware
+litex_bare_metal_demo --build-path=build/sim/
+litex_sim --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --ram-init=demo.bin
+```
+
+Um console como esse será iniciado o SoC irá executar o código carregado:
+```sh
+        __   _ __      _  __
+       / /  (_) /____ | |/_/
+      / /__/ / __/ -_)>  <
+     /____/_/\__/\__/_/|_|
+   Build your hardware, easily!
+
+ (c) Copyright 2012-2025 Enjoy-Digital
+ (c) Copyright 2007-2015 M-Labs
+
+ BIOS built on Sep 21 2025 00:35:41
+ BIOS CRC passed (160356a0)
+
+ LiteX git sha1: 51e4f2e65
+
+--=============== SoC ==================--
+CPU:            VexRiscv @ 1MHz
+BUS:            wishbone 32-bit @ 4GiB
+CSR:            32-bit data
+ROM:            128.0KiB
+SRAM:           8.0KiB
+MAIN-RAM:       64.0KiB
+```
+
+Para execução na FPGA vamos usar como exemplo a `Tang Primer 20k`. O download da toolchain pode ser feito no link:
+- https://cdn.gowinsemi.com.cn/Gowin_V1.9.11.03_Education_Linux.tar.gz
+
+```sh
+mkdir -p gowin && cd gowin
+wget https://cdn.gowinsemi.com.cn/Gowin_V1.9.11.03_Education_Linux.tar.gz
+tar -xvf Gowin_V1.9.11.03_Education_Linux.tar.gz
+export LD_PRELOAD=/usr/lib64/libfreetype.so.6 # ou /lib/x86_64-linux-gnu/libfreetype.so
+```
+
+Vamos compilar usando o módulo `litex-boards`, a lista de placas suportadas pode ser encontrada em:
+- https://github.com/litex-hub/litex-boards
+
+```sh
+# python3 -m litex_boards.targets.<board> --help
+# python3 -m litex_boards.targets.<board> --help
+python3 -m litex_boards.targets.sipeed_tang_primer_20k --build --load
+```
+
+Os códigos para serem executados no Core podem ser compilados na árvore:
+- https://github.com/enjoy-digital/litex/tree/master/litex/soc/software/demo
+
+E carregados no SoC de variadas formas, vamos usar um exemplo via serial:
+- https://github.com/enjoy-digital/litex/wiki/Load-Application-Code-To-CPU
+
+```sh
+litex_term /dev/ttyUSBX --kernel=demo.bin
+```
+
 ## Cores
 
 ### LightRiscv
