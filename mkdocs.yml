@@ -17,7 +17,7 @@ nav:
               - Chisel: chisel/chisel-info.md
               - Motivação: chisel/motivacao.md
               - Somadores e Subtratores: chisel/somadores.md
-          - Spinal: spinalHDL.md
+          - SpinalHDL: spinalHDL.md
       - Simulações: Sim.md
       - FPGA: FPGA.md
       - RISC-V: RISCV.md
