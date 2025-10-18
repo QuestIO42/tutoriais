@@ -81,8 +81,15 @@ O LiteX fornece todos os componentes comuns necessários para criar facilmente u
 - Construir backends para cadeias de ferramentas de código aberto e de fornecedores.
 - SoC Linux multinúcleo baseado em CPU VexRiscv-SMP, LiteDRAM e LiteSATA, construído e integrado com LiteX.
 
-Para instalar o litex basta executar:
+Para trabalhar com códigos RISC-V é preciso compilar a toolchain gnu:
+```sh
+git clone https://github.com/riscv/riscv-gnu-toolchain && cd riscv-gnu-toolchain
+sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip python3-tomli libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
+./configure --prefix=/opt/riscv --enable-multilib --enable-newlib --enable-linux --enable-debug-info --with-arch=rv32gc --with-abi=ilp32d
+make -j $(nproc) && sudo make install
+```
 
+Para instalar o litex basta criar um python virtual environment e depois executar o script de instalação:
 ```sh
 python3 -m venv litex-env
 source litex-env/bin/activate
@@ -95,33 +102,22 @@ wget https://raw.githubusercontent.com/enjoy-digital/litex/master/litex_setup.py
 chmod +x litex_setup.py
 ./litex_setup.py --init --install --config standard
 ```
-
-Para trabalhar com códigos RISC-V é preciso instalar a toolchain:
-```sh
-git clone https://github.com/riscv/riscv-gnu-toolchain && cd riscv-gnu-toolchain
-sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip python3-tomli libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
-./configure --prefix=/opt/riscv --enable-multilib --enable-newlib --enable-linux --enable-debug-info --with-arch=rv32gc --with-abi=ilp32d
-make -j $(nproc) && sudo make install
-```
-
-No exemplo que se segue vamos usar o `VexRiscv` uma derivação do `NaxRiscv`, para isso temos que instalar o `verilator`, `sbt` e o `openjdk`:
-```sh
-git clone https://github.com/SpinalHDL/NaxRiscv.git --recursive
-cd NaxRiscv
-export NAXRISCV=${PWD}
-make install-toolchain
-```
-
-Basta configurar a env `PATH` corretamente e estamos prontos para executar uma simulação:
-
 Executando `litex_sim --help` diversas opções interessantes podem ser encontradas para configuração do SoC:
 
-Para executar uma simulação vamos executar:
+Para executar uma simulação simples com vexriscv vamos instalar as dependências, o `verilator`, `sbt` e o `openjdk`.
 ```sh
-# 
+sudo apt install verilator sbt openjdk
+```
+
+Gerar o SoC:
+```sh
 litex_sim --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --no-compile-gateware
+```
+
+Para executar um código simples de exemplo vamos executar:
+```sh
 litex_bare_metal_demo --build-path=build/sim/
-litex_sim --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --ram-init=demo.bin
+litex_sim --integrated-main-ram-size=0x10000000 --cpu-type=vexriscv --cpu-variant=full --ram-init=demo.bin
 ```
 
 Um console como esse será iniciado o SoC irá executar o código carregado:
@@ -164,7 +160,6 @@ Vamos compilar usando o módulo `litex-boards`, a lista de placas suportadas pod
 
 ```sh
 # python3 -m litex_boards.targets.<board> --help
-# python3 -m litex_boards.targets.<board> --help
 python3 -m litex_boards.targets.sipeed_tang_primer_20k --build --load
 ```
 
@@ -183,5 +178,118 @@ litex_term /dev/ttyUSBX --kernel=demo.bin
 ### LightRiscv
 
 ### VexRiscv
+O VexRiscv é uma implementação RISC-V escrita em SpinalHDL, derivação do NaxRiscv. Dentre os recursos suportados estão:
+
+- Conjunto de instruções RV32I[M][A][F[D]][C]
+- Pipeline de 2 a 5+ estágios ([Buscar*X], Decodificar, Executar, [Memória], [Gravar])
+- Otimizado para FPGA, não utiliza nenhum bloco IP/primitivo específico do fornecedor
+- Otimizado para AXI4, Avalon e wishbone
+- Extensões MUL/DIV opcionais / FPU F32/F64 opcional, / MMU opcional.
+- Extensão de depuração opcional que permite a depuração do Eclipse por meio de uma conexão GDB >> openOCD >> JTAG
+- Interrupções e tratamento de exceções opcionais com os modos de execução [Supervisor] e [Usuário], conforme definido no RISC-V Privileged ISA Especificação v1.10.
+- Compatível com Linux (SoC: https://github.com/enjoy-digital/linux-on-litex-vexriscv)
+- Ports para Zephyr e FreeRTOS.
+
+Para gerar um core é preciso instalar as dependências, `verilator` (3.9+), `sbt` e o `openjdk` (8):
+```sh
+# JAVA JDK 8
+sudo add-apt-repository -y ppa:openjdk-r/ppa
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk -y
+sudo update-alternatives --config java
+sudo update-alternatives --config javac
+
+# Install SBT - https://www.scala-sbt.org/
+echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list
+echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt_old.list
+curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add
+sudo apt-get update
+sudo apt-get install sbt
+
+# Verilator (for sim only, really needs 3.9+, in general apt-get will give you 3.8)
+sudo apt-get install git make autoconf g++ flex bison
+git clone http://git.veripool.org/git/verilator   # Only first time
+unsetenv VERILATOR_ROOT  # For csh; ignore error if on bash
+unset VERILATOR_ROOT  # For bash
+cd verilator
+git pull        # Make sure we're up-to-date
+git checkout v4.216
+autoconf        # Create ./configure script
+./configure
+make
+sudo make install
+```
+
+Basta agora gerar o SoC:
+```sh
+sbt "runMain vexriscv.demo.GenFull"
+```
+
+Vários cores pré-configurados como (Murax, Briey, Linux, GenFull, GenSmallest) podem ser encontrados em:
+https://github.com/SpinalHDL/VexRiscv/tree/master/src/main/scala/vexriscv/demo
+
+Existem vários plugins que podem ser adicionados e criados, alguns exemplos dos que já existem são:
+
+- HazardSimplePlugin
+- BranchPlugin
+- MulPlugin
+- DivPlugin
+- CsrPlugin
+- DebugPlugin
+- EmbeddedRiscvJtag
+- FpuPlugin
+
 
 ### NaxRiscv
+
+O NaxRiscv é uma implementação RISC-V escrita em SpinalHDL. Dentre os recursos suportados estão:
+
+- Execução fora de ordem com renomeação de registradores
+- Superscalar (ex: 2 decodificadores, 3 unidades de execução, 2 desativadas)
+- (RV32/RV64)IMAFDCSU (Linux/Buildroot funciona em hardware)
+- HDL portátil, mas FPGA com RAM distribuída
+- Elaboração de hardware descentralizada (nível superior vazio parametrizado com plugins)
+- Frontend implementado em torno de uma estrutura de pipeline para facilitar a personalização
+- MMU com hardware reabastecido (SV32, SV39)
+- Visualização do pipeline por meio de simulação do Verilator e Konata
+- Suporte a JTAG / OpenOCD / GDB implementando o RISCV External Debug Support v. 0.13.2
+
+No exemplo que se segue vamos usar o `VexRiscv` uma derivação do `NaxRiscv`, para isso temos que instalar o `verilator`, `sbt` e o `openjdk`:
+```sh
+git clone https://github.com/SpinalHDL/NaxRiscv.git --recursive
+cd NaxRiscv
+export NAXRISCV=${PWD}
+make install-toolchain
+```
+Basta configurar a env `PATH` corretamente e estamos prontos para executar uma simulação.
+
+Para gerar o SoC:
+```sh
+export NAXRISCV=${PWD}
+(cd ext/NaxSoftware && ./init.sh)
+# Generate NaxRiscv
+cd $NAXRISCV
+sbt "runMain naxriscv.Gen"
+```
+
+Para executar a simulação:
+```sh
+# Install SDL2, allowing the simulation to display a framebuffer
+sudo apt-get install libsdl2-2.0-0 libsdl2-dev
+
+# Compile the simulator
+cd $NAXRISCV/src/test/cpp/naxriscv
+make compile
+./obj_dir/VNaxRiscv
+```
+
+Para executar linux em uma simulação:
+```sh
+cd $NAXRISCV/src/test/cpp/naxriscv
+export LINUX_IMAGES=$NAXRISCV/ext/NaxSoftware/buildroot/images/rv32ima
+./obj_dir/VNaxRiscv \
+    --load-bin $LINUX_IMAGES/fw_jump.bin,0x80000000 \
+    --load-bin $LINUX_IMAGES/linux.dtb,0x80F80000 \
+    --load-bin $LINUX_IMAGES/Image,0x80400000 \
+    --load-bin $LINUX_IMAGES/rootfs.cpio,0x81000000 
+```
