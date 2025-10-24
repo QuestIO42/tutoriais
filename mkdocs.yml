@@ -21,7 +21,8 @@ nav:
       - Simulações: Sim.md
       - FPGA: FPGA.md
       - RISC-V: RISCV.md
-  - VLAB: "https://legacy.vlab.dc.ufscar.br"
+  - VLAB: "https://legacy.vlab.dc.ufscar.br/camera.php"
+  - Agenda: "https://legacy.vlab.dc.ufscar.br/agenda/"
   - Equipe: "https://vlab.dc.ufscar.br/equipe.html"
 
 theme:
