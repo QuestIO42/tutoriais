@@ -19,6 +19,7 @@ nav:
               - Somadores e Subtratores: chisel/somadores.md
           - SpinalHDL: spinalHDL.md
       - Simulações: Sim.md
+      - Verificações: Verif_Funcionais.md
       - FPGA: FPGA.md
       - RISC-V: RISCV.md
   - VLAB: "https://legacy.vlab.dc.ufscar.br/camera.php"
