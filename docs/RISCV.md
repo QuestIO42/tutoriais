@@ -68,18 +68,35 @@ Se você quer se aprofundar na construção de um processador RISC-V, sugerimos 
 
 ### Litex
 
-O framework LiteX fornece uma infraestrutura conveniente e eficiente para criar núcleos/SoCs FPGA e criar sistemas completos baseados em FPGA.
+O framework LiteX fornece uma infraestrutura integrada para criar SoCs e integrar periféricos. Sendo capaz de criar sistemas completos baseados em FPGA.
+
+```txt
+                                      +---------------+
+                                      |FPGA toolchains|
+                                      +----^-----+----+
+                                           |     |
+                                        +--+-----v--+
+                       +-------+        |           |
+                       | Migen +-------->           |
+                       +-------+        |   LiteX   +
+              +----------------------+  |           |
+              |LiteX Cores Ecosystem +-->           |
+              +----------------------+  +-^-------^-+
+               (Eth, SATA, DRAM, USB,     |       |
+                PCIe, Video, etc...)      +       +
+                                         board   target
+                                         file    file
+```
 
 O LiteX fornece todos os componentes comuns necessários para criar facilmente um núcleo/SoC FPGA:
 
-- Barramentos e fluxos (Wishbone, AXI, Avalon-ST) e suas interconexões.
+- Barramentos (Wishbone, AXI, Avalon-ST).
 - Núcleos simples: RAM, ROM, Timer, UART, JTAG, etc.
 - Núcleos complexos através do ecossistema de núcleos: LiteDRAM, LitePCIe, LiteEth, LiteSATA, etc...
-- Suporte a linguagens mistas com recursos de integração VHDL/Verilog/(n)Migen/Spinal-HDL/etc...
-- Infraestrutura de depuração poderosa através de diversas pontes e Litescope.
-- Simulação direta/rápida através do Verilator.
-- Construir backends para cadeias de ferramentas de código aberto e de fornecedores.
-- SoC Linux multinúcleo baseado em CPU VexRiscv-SMP, LiteDRAM e LiteSATA, construído e integrado com LiteX.
+- Suporte a linguagens mistas com recursos de integração VHDL/Verilog/Migen/Spinal-HDL/etc...
+- Infraestrutura de depuração através de diversas Bridges ou Litescope.
+- Simulação simplificada através do Verilator.
+- SoC Linux multinúcleo baseado em CPU VexRiscv-SMP, LiteDRAM e LiteSATA (https://github.com/litex-hub/linux-on-litex-vexriscv).
 
 Para trabalhar com códigos RISC-V é preciso compilar a toolchain gnu:
 ```sh
@@ -114,10 +131,11 @@ Gerar o SoC:
 litex_sim --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --no-compile-gateware
 ```
 
-Para executar um código simples de exemplo vamos executar:
+Para executar um código simples simulado como exemplo vamos executar o `donut`:
 ```sh
+litex_sim --integrated-sram-size=0x2000 --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --cpu-variant=full --no-compile-gateware
 litex_bare_metal_demo --build-path=build/sim/
-litex_sim --integrated-main-ram-size=0x10000000 --cpu-type=vexriscv --cpu-variant=full --ram-init=demo.bin
+litex_sim --integrated-sram-size=0x2000 --integrated-main-ram-size=0x10000 --cpu-type=vexriscv --cpu-variant=full --ram-init=demo.bin
 ```
 
 Um console como esse será iniciado o SoC irá executar o código carregado:
@@ -160,7 +178,9 @@ Vamos compilar usando o módulo `litex-boards`, a lista de placas suportadas pod
 
 ```sh
 # python3 -m litex_boards.targets.<board> --help
-python3 -m litex_boards.targets.sipeed_tang_primer_20k --build --load
+python3 -m litex_boards.targets.sipeed_tang_primer_20k --build
+litex_bare_metal_demo --build-path=build/sipeed_tang_primer_20k/
+python3 -m litex_boards.targets.sipeed_tang_primer_20k --load
 ```
 
 Os códigos para serem executados no Core podem ser compilados na árvore:
@@ -180,11 +200,11 @@ litex_term /dev/ttyUSBX --kernel=demo.bin
 ### VexRiscv
 O VexRiscv é uma implementação RISC-V escrita em SpinalHDL, derivação do NaxRiscv. Dentre os recursos suportados estão:
 
-- Conjunto de instruções RV32I[M][A][F[D]][C]
-- Pipeline de 2 a 5+ estágios ([Buscar*X], Decodificar, Executar, [Memória], [Gravar])
-- Otimizado para FPGA, não utiliza nenhum bloco IP/primitivo específico do fornecedor
-- Otimizado para AXI4, Avalon e wishbone
-- Extensões MUL/DIV opcionais / FPU F32/F64 opcional, / MMU opcional.
+- Conjunto de instruções RV32I[M][A][F[D]][C].
+- Pipeline de 2 a 5+ estágios ([Buscar*X], Decodificar, Executar, [Memória], [Gravar]).
+- Otimizado para FPGA, não utiliza nenhum bloco IP/primitivo específico do prorpietário.
+- Otimizado para AXI4, Avalon e wishbone.
+- Extensões MUL/DIV opcionais / FPU F32/F64 opcional / MMU opcional.
 - Extensão de depuração opcional que permite a depuração do Eclipse por meio de uma conexão GDB >> openOCD >> JTAG
 - Interrupções e tratamento de exceções opcionais com os modos de execução [Supervisor] e [Usuário], conforme definido no RISC-V Privileged ISA Especificação v1.10.
 - Compatível com Linux (SoC: https://github.com/enjoy-digital/linux-on-litex-vexriscv)
@@ -244,14 +264,14 @@ Existem vários plugins que podem ser adicionados e criados, alguns exemplos dos
 
 O NaxRiscv é uma implementação RISC-V escrita em SpinalHDL. Dentre os recursos suportados estão:
 
-- Execução fora de ordem com renomeação de registradores
-- Superscalar (ex: 2 decodificadores, 3 unidades de execução, 2 desativadas)
-- (RV32/RV64)IMAFDCSU (Linux/Buildroot funciona em hardware)
-- HDL portátil, mas FPGA com RAM distribuída
-- Elaboração de hardware descentralizada (nível superior vazio parametrizado com plugins)
-- Frontend implementado em torno de uma estrutura de pipeline para facilitar a personalização
-- MMU com hardware reabastecido (SV32, SV39)
-- Visualização do pipeline por meio de simulação do Verilator e Konata
+- Execução fora de ordem com renomeação de registradores.
+- Superscalar (ex: 2 decodificadores, 3 unidades de execução, 2 desativadas).
+- (RV32/RV64)IMAFDCSU (Linux/Buildroot funciona em hardware).
+- HDL portátil, mas FPGA com RAM distribuída.
+- Elaboração de hardware descentralizada (nível superior vazio parametrizado com plugins).
+- Frontend implementado em torno de uma estrutura de pipeline para facilitar a personalização.
+- MMU com hardware reabastecido (SV32, SV39).
+- Visualização do pipeline por meio de simulação do Verilator e Konata.
 - Suporte a JTAG / OpenOCD / GDB implementando o RISCV External Debug Support v. 0.13.2
 
 No exemplo que se segue vamos usar o `VexRiscv` uma derivação do `NaxRiscv`, para isso temos que instalar o `verilator`, `sbt` e o `openjdk`:
@@ -272,7 +292,7 @@ cd $NAXRISCV
 sbt "runMain naxriscv.Gen"
 ```
 
-Para executar a simulação:
+Para executar a simulação é preciso compilar as dependências e depois o simulador:
 ```sh
 # Install SDL2, allowing the simulation to display a framebuffer
 sudo apt-get install libsdl2-2.0-0 libsdl2-dev
