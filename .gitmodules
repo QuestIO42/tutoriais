@@ -1,0 +1,6 @@
+[submodule "code/linear-systems"]
+	path = code/verilog/chisel/linear-systems
+	url = https://github.com/arruk/linear-systems
+[submodule "code/ALU_Verification"]
+	path = code/python/ALU_Verification
+	url = https://github.com/MarceloDaEnc/ALU_Verification
