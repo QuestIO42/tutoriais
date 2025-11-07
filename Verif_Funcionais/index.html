@@ -1,0 +1,2299 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Tutoriais básicos para o desenvolvimento de hardware">
+      
+      
+        <meta name="author" content="QuestIO team">
+      
+      
+        <link rel="canonical" href="https://tutoriais.vlab.dc.ufscar.br/Verif_Funcionais/">
+      
+      
+        <link rel="prev" href="../Sim/">
+      
+      
+        <link rel="next" href="../FPGA/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>Verificações - QuestI0 : Tutoriais</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Merriweather Sans";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-2YFMTLKN4V"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-2YFMTLKN4V",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-2YFMTLKN4V",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="dark-blue" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#a-importancia-da-verificacao-funcional-por-que-testar-e-tao-crucial-quanto-projetar" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="QuestI0 : Tutoriais" class="md-header__button md-logo" aria-label="QuestI0 : Tutoriais" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M176 24c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c-35.3 0-64 28.7-64 64H24c-13.3 0-24 10.7-24 24s10.7 24 24 24h40v56H24c-13.3 0-24 10.7-24 24s10.7 24 24 24h40v56H24c-13.3 0-24 10.7-24 24s10.7 24 24 24h40c0 35.3 28.7 64 64 64v40c0 13.3 10.7 24 24 24s24-10.7 24-24v-40h56v40c0 13.3 10.7 24 24 24s24-10.7 24-24v-40h56v40c0 13.3 10.7 24 24 24s24-10.7 24-24v-40c35.3 0 64-28.7 64-64h40c13.3 0 24-10.7 24-24s-10.7-24-24-24h-40v-56h40c13.3 0 24-10.7 24-24s-10.7-24-24-24h-40v-56h40c13.3 0 24-10.7 24-24s-10.7-24-24-24h-40c0-35.3-28.7-64-64-64V24c0-13.3-10.7-24-24-24s-24 10.7-24 24v40h-56V24c0-13.3-10.7-24-24-24s-24 10.7-24 24v40h-56zm-16 104h192c17.7 0 32 14.3 32 32v192c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32m16 48v160h160V176z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            QuestI0 : Tutoriais
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Verificações
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="dark-blue" data-md-color-accent="deep-purple"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="deep-orange"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/QuestIO42/tutoriais" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    QuestIO42/tutoriais
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://vlab.dc.ufscar.br" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://questio.vlab.dc.ufscar.br/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  QuestI0
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href=".." class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutoriais
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://legacy.vlab.dc.ufscar.br/camera.php" class="md-tabs__link">
+        
+  
+  
+    
+  
+  VLAB
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://legacy.vlab.dc.ufscar.br/agenda/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Agenda
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://vlab.dc.ufscar.br/equipe.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Equipe
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="QuestI0 : Tutoriais" class="md-nav__button md-logo" aria-label="QuestI0 : Tutoriais" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M176 24c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c-35.3 0-64 28.7-64 64H24c-13.3 0-24 10.7-24 24s10.7 24 24 24h40v56H24c-13.3 0-24 10.7-24 24s10.7 24 24 24h40v56H24c-13.3 0-24 10.7-24 24s10.7 24 24 24h40c0 35.3 28.7 64 64 64v40c0 13.3 10.7 24 24 24s24-10.7 24-24v-40h56v40c0 13.3 10.7 24 24 24s24-10.7 24-24v-40h56v40c0 13.3 10.7 24 24 24s24-10.7 24-24v-40c35.3 0 64-28.7 64-64h40c13.3 0 24-10.7 24-24s-10.7-24-24-24h-40v-56h40c13.3 0 24-10.7 24-24s-10.7-24-24-24h-40v-56h40c13.3 0 24-10.7 24-24s-10.7-24-24-24h-40c0-35.3-28.7-64-64-64V24c0-13.3-10.7-24-24-24s-24 10.7-24 24v40h-56V24c0-13.3-10.7-24-24-24s-24 10.7-24 24v40h-56zm-16 104h192c17.7 0 32 14.3 32 32v192c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32m16 48v160h160V176z"/></svg>
+
+    </a>
+    QuestI0 : Tutoriais
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/QuestIO42/tutoriais" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    QuestIO42/tutoriais
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://vlab.dc.ufscar.br" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://questio.vlab.dc.ufscar.br/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    QuestI0
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Tutoriais
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Tutoriais
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    HDL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            HDL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HDL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Verilog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_2" id="__nav_3_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Chisel
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Chisel
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/introducao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introdução
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/chisel-info/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Chisel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/motivacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Motivação
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/somadores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Somadores e Subtratores
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spinalHDL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SpinalHDL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Sim/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simulações
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Verificações
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Verificações
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-o-custo-do-erro" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. O Custo do Erro
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-o-desafio-da-complexidade-por-que-simular-nao-e-o-bastante" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. O Desafio da Complexidade (Por que "Simular" não é o bastante)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-o-papel-da-verificacao-confianca-atraves-da-adversidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. O Papel da Verificação: Confiança através da Adversidade
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-o-valor-do-ambiente-de-verificacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. O Valor do Ambiente de Verificação
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-mao-na-massa-construindo-um-ambiente-de-verificacao-para-uma-ula-de-32-bits" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Mão na Massa: Construindo um Ambiente de Verificação para uma ULA de 32 bits
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Mão na Massa: Construindo um Ambiente de Verificação para uma ULA de 32 bits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-dut-design-under-test-a-ula-em-verilog-que-queremos-testar" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1. DUT (Design Under Test): A ULA em Verilog que queremos testar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-tabela-de-verificacao-corner-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2. Tabela de Verificação (Corner Cases)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-ambiente-de-verificacao-baseado-na-metodologia-uvm-universal-verification-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3. Ambiente de Verificação baseado na Metodologia UVM (Universal Verification Methodology)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3. Ambiente de Verificação baseado na Metodologia UVM (Universal Verification Methodology)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#531-golden-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.1. Golden Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#532-sequencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.2. Sequencer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#533-scoreboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.3. Scoreboard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#534-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.4. Coverage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4. Resultados
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consideracoes-finais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considerações Finais
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FPGA/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FPGA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RISCV/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RISC-V
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://legacy.vlab.dc.ufscar.br/camera.php" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VLAB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://legacy.vlab.dc.ufscar.br/agenda/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Agenda
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://vlab.dc.ufscar.br/equipe.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Equipe
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-o-custo-do-erro" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. O Custo do Erro
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-o-desafio-da-complexidade-por-que-simular-nao-e-o-bastante" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. O Desafio da Complexidade (Por que "Simular" não é o bastante)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-o-papel-da-verificacao-confianca-atraves-da-adversidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. O Papel da Verificação: Confiança através da Adversidade
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-o-valor-do-ambiente-de-verificacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. O Valor do Ambiente de Verificação
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-mao-na-massa-construindo-um-ambiente-de-verificacao-para-uma-ula-de-32-bits" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Mão na Massa: Construindo um Ambiente de Verificação para uma ULA de 32 bits
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Mão na Massa: Construindo um Ambiente de Verificação para uma ULA de 32 bits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-dut-design-under-test-a-ula-em-verilog-que-queremos-testar" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1. DUT (Design Under Test): A ULA em Verilog que queremos testar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-tabela-de-verificacao-corner-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2. Tabela de Verificação (Corner Cases)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-ambiente-de-verificacao-baseado-na-metodologia-uvm-universal-verification-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3. Ambiente de Verificação baseado na Metodologia UVM (Universal Verification Methodology)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3. Ambiente de Verificação baseado na Metodologia UVM (Universal Verification Methodology)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#531-golden-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.1. Golden Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#532-sequencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.2. Sequencer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#533-scoreboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.3. Scoreboard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#534-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3.4. Coverage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4. Resultados
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consideracoes-finais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considerações Finais
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="a-importancia-da-verificacao-funcional-por-que-testar-e-tao-crucial-quanto-projetar">A Importância da Verificação Funcional: Por que testar é tão crucial quanto projetar</h1>
+<p>No desenvolvimento de hardware, existe um ditado famoso: <strong>"Se você não o verificou, ele não funciona"</strong>.</p>
+<p>A verificação funcional é o processo de confirmar que o seu design (o "Design Under Test" ou DUT) faz exatamente o que ele foi especificado para fazer, em todas as condições possíveis.</p>
+<p>Para um projeto de ULA de 32 bits, por exemplo, isso não significa apenas rodar uma simulação rápida para ver se 1+1=2. Significa provar, metodicamente, que o seu design está correto. A importância disso se resume a três pilares: Custo, Complexidade e Confiança.</p>
+<h2 id="1-o-custo-do-erro">1. O Custo do Erro</h2>
+<p>Em design de hardware, bugs não são fáceis de corrigir.</p>
+<ul>
+<li>
+<p><strong>Em ASICs (Chips Customizados)</strong>: Um bug funcional encontrado após a fabricação (tape-out) pode custar milhões de dólares e meses de atraso para um respin (uma nova versão do chip).</p>
+</li>
+<li>
+<p><strong>Em FPGAs</strong>: Embora corrigível, um bug que chega ao cliente final pode exigir recalls de produtos, atualizações de firmware complexas e, o pior de tudo, destruir a reputação da sua empresa.</p>
+</li>
+</ul>
+<p>A verificação funcional é a "rede de segurança" que captura esses bugs devastadores antes que eles saiam do ambiente de simulação.</p>
+<h2 id="2-o-desafio-da-complexidade-por-que-simular-nao-e-o-bastante">2. O Desafio da Complexidade (Por que "Simular" não é o bastante)</h2>
+<p>Um design de 32 bits é muito mais complexo do que parece. A ULA em questão tem duas entradas de 32 bits. Isso significa que existem 2³²×2³²=2⁶⁴ combinações de entrada possíveis... apenas para a soma.</p>
+<p>É literalmente impossível testar todas as combinações manualmente (isso levaria bilhões de anos).</p>
+<p>Uma simulação simples (chamada de happy path ou "caminho feliz") pode testar 10+5 ou 100/10. Mas a verificação funcional se preocupa com o que acontece nos extremos, os casos de canto (corner cases), que é onde 99% dos bugs se escondem.</p>
+<h2 id="3-o-papel-da-verificacao-confianca-atraves-da-adversidade">3. O Papel da Verificação: Confiança através da Adversidade</h2>
+<p>A verificação funcional muda a mentalidade de "Como eu mostro que funciona?" para "Como eu tento quebrar isso?".</p>
+<p>No contexto de um projeto de ULA de 32 bits (unsigned), o ambiente de verificação é fundamental para levantar e responder questões que um teste simples jamais abordaria:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div><pre><span></span><code>Soma (ADD): O que acontece quando você soma 32&#39;hFFFFFFFF + 32&#39;h1? O resultado deve ser 32&#39;h00000000 e um Carry deve ser gerado. O seu design trata esse carry corretamente? Ou ele simplesmente dá um resultado errado?
+
+Subtração (SUB): O que acontece em 32&#39;h0 - 32&#39;h1? Isso é um underflow. O resultado deve ser 32&#39;hFFFFFFFF e um Borrow (empréstimo) deve ser sinalizado. Seu design faz isso?
+
+Multiplicação (MUL): O que acontece ao multiplicar 32&#39;hFFFFFFFF * 32&#39;hFFFFFFFF? O resultado real tem 64 bits. O seu design trunca o resultado para 32 bits? Ele armazena corretamente os 64 bits (nos registradores Hi e Lo, por exemplo)? Se você não verificar isso, pode estar produzindo resultados massivamente incorretos em multiplicações grandes sem nem saber.
+
+Divisão (DIV): Este é o caso clássico de exceção. O que acontece se B for zero (A/0)? O design trava? Ele entra em um loop infinito? Ou ele sinaliza um flag de &quot;Divisão por Zero&quot;, como deveria?
+</code></pre></div></td></tr></table></div>
+<h2 id="4-o-valor-do-ambiente-de-verificacao">4. O Valor do Ambiente de Verificação</h2>
+<p>A verificação funcional não é um passo opcional; em muitos projetos, ela consome mais de 70% do tempo total de desenvolvimento.</p>
+<p>Ter um ambiente de verificação permite que você automatize a busca por corner cases. Você pode rodar milhões de transações aleatórias durante a noite e ter a certeza de que seu Golden Model (a "fonte da verdade") pegará qualquer discrepância, garantindo que a ULA que você projetou é robusta, correta e pronta para o mundo real.</p>
+<h2 id="5-mao-na-massa-construindo-um-ambiente-de-verificacao-para-uma-ula-de-32-bits">5. Mão na Massa: Construindo um Ambiente de Verificação para uma ULA de 32 bits</h2>
+<p>Depois de entender por que a verificação é a etapa mais crítica e demorada no design de hardware, vamos colocar a mão na massa. Nesta seção, construiremos um ambiente de verificação completo para uma ULA de 32 bits.</p>
+<p>Usaremos uma abordagem que combina Cocotb (para simulação em Python) e pyuvm (uma implementação Python da Universal Verification Methodology - UVM).</p>
+<p>Nosso objetivo é criar um testbench automatizado, reutilizável e auto-verificável que:</p>
+<ol>
+<li>
+<p>Use um DUT (Design Under Test) escrito em Verilog.</p>
+</li>
+<li>
+<p>Defina um plano de verificação focado em <strong>corner cases</strong>.</p>
+</li>
+<li>
+<p>Implemente um <strong>Golden Model</strong> em Python como nossa "fonte da verdade".</p>
+</li>
+<li>
+<p>Use um <strong>Sequencer</strong> (UVM) para gerar estímulos (tanto os corner cases quanto milhares de testes aleatórios).</p>
+</li>
+<li>
+<p>Use um <strong>Scoreboard</strong> (UVM) para comparar automaticamente os resultados do DUT com os do Golden Model.</p>
+</li>
+<li>
+<p>Colete <strong>Coverage</strong> (UVM) para garantir que todos os nossos cenários de teste foram, de fato, executados.</p>
+</li>
+</ol>
+<h3 id="51-dut-design-under-test-a-ula-em-verilog-que-queremos-testar">5.1. DUT (Design Under Test): A ULA em Verilog que queremos testar</h3>
+<p>O primeiro passo é ter o design que queremos testar. O nosso DUT é o módulo <strong>alu_32_bit</strong> escrito em Verilog.</p>
+<p>É fundamental entender que este é um modelo educacional simplificado. Ele não é uma ULA de nível de produção. Suas principais características (e limitações) são:</p>
+<ul>
+<li>
+<p>Opera apenas com números unsigned (sem sinal). Uma ULA real implementaria aritmética de complemento de dois.</p>
+</li>
+<li>
+<p>Possui apenas 4 operações básicas, selecionadas pela entrada opcode_in:</p>
+<ul>
+<li>
+<p><code>2'b00</code>: <strong>ADD</strong> (Soma)</p>
+</li>
+<li>
+<p><code>2'b01</code>: <strong>SUB</strong> (Subtração)</p>
+</li>
+<li>
+<p><code>2'b10</code>: <strong>MUL</strong> (Multiplicação)</p>
+</li>
+<li>
+<p><code>2'b11</code>: <strong>DIV</strong> (Divisão)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>A Multiplicação (<strong>MUL</strong>) produz um resultado de 64 bits, que é dividido entre as saídas <strong>result_out_hi</strong> (32 bits mais significativos) e <strong>result_out_low</strong> (32 bits menos significativos).</p>
+</li>
+<li>
+<p>A Divisão (DIV) retorna o Quociente em <strong>result_out_low</strong> e o Resto (módulo) em <strong>result_out_hi</strong>.</p>
+</li>
+<li>
+<p>Possui saídas de status dedicadas: <strong>carry</strong> (para estouro de soma), <strong>borrow</strong> (para estouro de subtração) e <strong>error_out</strong> (especificamente para divisão por zero).</p>
+</li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span>
+<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="k">module</span><span class="w"> </span><span class="n">alu_32_bit</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="w">    </span><span class="k">input</span><span class="w"> </span><span class="n">clk</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="w">    </span><span class="k">input</span><span class="w"> </span><span class="n">rst</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">    </span><span class="c1">// Entradas</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">    </span><span class="k">input</span><span class="w"> </span><span class="p">[</span><span class="mh">1</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w">  </span><span class="n">opcode_in</span><span class="p">,</span><span class="w"> </span><span class="c1">// 00:ADD, 01:SUB, 10:MUL, 11:DIV</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">    </span><span class="k">input</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">A_in</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="w">    </span><span class="k">input</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">B_in</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">    </span><span class="c1">// Saídas</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">result_out_low</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w"> </span><span class="p">[</span><span class="mh">31</span><span class="o">:</span><span class="mh">0</span><span class="p">]</span><span class="w"> </span><span class="n">result_out_hi</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w"> </span><span class="n">carry</span><span class="p">,</span><span class="w"> </span><span class="c1">// 1 se result_out_low &gt; 0xFFFFFFFF</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w"> </span><span class="n">borrow</span><span class="p">,</span><span class="w"> </span><span class="c1">// 1 se result_out_low &lt; 0</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">    </span><span class="k">output</span><span class="w"> </span><span class="kt">reg</span><span class="w"> </span><span class="n">error_out</span><span class="w">  </span><span class="c1">// 1 se B=0 na divisão</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="p">);</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="w">    </span><span class="c1">// O &#39;coração&#39; da ULA (Implementação simplificada)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rst</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">            </span><span class="n">result_out_low</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="mi">&#39;d0</span><span class="p">;</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">            </span><span class="n">result_out_hi</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="mi">&#39;d0</span><span class="p">;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="w">            </span><span class="n">carry</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">&#39;b0</span><span class="p">;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="w">            </span><span class="n">borrow</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">&#39;b0</span><span class="p">;</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="w">            </span><span class="n">error_out</span><span class="w">  </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">&#39;b0</span><span class="p">;</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="w">        </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="w">            </span><span class="c1">// Reseta os erros</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="w">            </span><span class="n">result_out_low</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="mi">&#39;d0</span><span class="p">;</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="w">            </span><span class="n">result_out_hi</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="mi">&#39;d0</span><span class="p">;</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="w">            </span><span class="n">carry</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">&#39;b0</span><span class="p">;</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">            </span><span class="n">borrow</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">&#39;b0</span><span class="p">;</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="w">            </span><span class="n">error_out</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">&#39;b0</span><span class="p">;</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">opcode_in</span><span class="p">)</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">                </span><span class="c1">// ADD: {Carry, Soma}</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="w">                </span><span class="mh">2</span><span class="mb">&#39;b00</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">carry</span><span class="p">,</span><span class="w"> </span><span class="n">result_out_low</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A_in</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B_in</span><span class="p">;</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">                </span><span class="c1">// SUB: {Borrow, Subtração}</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="w">                </span><span class="mh">2</span><span class="mb">&#39;b01</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">borrow</span><span class="p">,</span><span class="w"> </span><span class="n">result_out_low</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A_in</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">B_in</span><span class="p">;</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="w">                </span><span class="c1">// MUL: Resultado de 64 bits</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="w">                </span><span class="mh">2</span><span class="mb">&#39;b10</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">result_out_hi</span><span class="p">,</span><span class="w"> </span><span class="n">result_out_low</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A_in</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B_in</span><span class="p">;</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="w">                </span><span class="c1">// DIV: {Resto, Quociente}</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">                </span><span class="mh">2</span><span class="mb">&#39;b11</span><span class="o">:</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">B_in</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">32</span><span class="mi">&#39;d0</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="w">                        </span><span class="n">error_out</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">1</span><span class="mb">&#39;b1</span><span class="p">;</span><span class="w"> </span><span class="c1">// Erro: Divisão por zero!</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">                        </span><span class="n">result_out_low</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="p">&#39;</span><span class="n">hX</span><span class="p">;</span><span class="w"> </span><span class="c1">// Indefinido</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="w">                        </span><span class="n">result_out_hi</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="p">&#39;</span><span class="n">hX</span><span class="p">;</span><span class="w"> </span><span class="c1">// Indefinido</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">                    </span><span class="k">end</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">                        </span><span class="n">result_out_low</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A_in</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">B_in</span><span class="p">;</span><span class="w"> </span><span class="c1">// Quociente</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="w">                        </span><span class="n">result_out_hi</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">A_in</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">B_in</span><span class="p">;</span><span class="w"> </span><span class="c1">// Resto</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">                    </span><span class="k">end</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="w">                </span><span class="k">end</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="w">                </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="k">begin</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="w">                    </span><span class="n">result_out_low</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="p">&#39;</span><span class="n">hX</span><span class="p">;</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="w">                    </span><span class="n">result_out_hi</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">32</span><span class="p">&#39;</span><span class="n">hX</span><span class="p">;</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="w">                </span><span class="k">end</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">            </span><span class="k">endcase</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="w">        </span><span class="k">end</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="k">end</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="k">endmodule</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="52-tabela-de-verificacao-corner-cases">5.2. Tabela de Verificação (Corner Cases)</h3>
+<p>Antes de escrever qualquer código de teste, precisamos de um plano de verificação. A parte mais importante desse plano é identificar os "casos de canto" (corner cases) — os cenários extremos onde os bugs adoram se esconder.</p>
+<p>Como pensar para montar esta tabela? O processo mental é:</p>
+<ol>
+<li>
+<p><strong>Limites (Zeros)</strong>: O que acontece quando as entradas são zero? (0+0, A-A, A*0, 0/B, B/0).</p>
+</li>
+<li>
+<p><strong>Limites (Máximos)</strong>: O que acontece quando as entradas são o valor máximo (0xFFFFFFFF)?</p>
+</li>
+<li>
+<p><strong>Estouros (Overflow/Underflow)</strong>: O que acontece quando o resultado ultrapassa os 32 bits? (0xFFFFFFFF + 1). O que acontece quando subtraímos um número maior de um menor? (0 - 1).</p>
+</li>
+<li>
+<p><strong>Casos Especiais (Identidades)</strong>: Quais são as identidades matemáticas? (A / 1, A / A).</p>
+</li>
+<li>
+<p><strong>Exceções (Erros)</strong>: Quais operações são ilegais? (A / 0).</p>
+</li>
+</ol>
+<p>Com base nesse pensamento, foi montada a seguinte tabela de casos de teste direcionados:</p>
+<table>
+<thead>
+<tr>
+<th>Operação</th>
+<th>Entradas críticas</th>
+<th>O que verificar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Soma</strong></td>
+<td><code>0xFFFFFFFF + 1</code></td>
+<td><code>carry = 1</code>, resultado = <code>0</code></td>
+</tr>
+<tr>
+<td><strong>Soma</strong></td>
+<td><code>0 + 0</code></td>
+<td>resultado = <code>0</code></td>
+</tr>
+<tr>
+<td><strong>Subtração</strong></td>
+<td><code>A &lt; B</code></td>
+<td><code>borrow = 1</code></td>
+</tr>
+<tr>
+<td><strong>Subtração</strong></td>
+<td><code>A - A</code></td>
+<td>resultado = <code>0</code></td>
+</tr>
+<tr>
+<td><strong>Multiplicação</strong></td>
+<td><code>0xFFFFFFFF * 0x2</code></td>
+<td>truncamento correto</td>
+</tr>
+<tr>
+<td><strong>Multiplicação</strong></td>
+<td><code>0xFFFFFFFF * 0xFFFFFFFF</code></td>
+<td>bits altos na saída HI corretamente</td>
+</tr>
+<tr>
+<td><strong>Divisão</strong></td>
+<td><code>x / 0</code></td>
+<td>flag ou comportamento definido</td>
+</tr>
+<tr>
+<td><strong>Divisão</strong></td>
+<td><code>0 / x</code></td>
+<td>resto = <code>0</code>, resultado = <code>0</code></td>
+</tr>
+<tr>
+<td><strong>Divisão</strong></td>
+<td><code>x / 1</code></td>
+<td>resto = <code>0</code>, resultado = <code>x</code></td>
+</tr>
+<tr>
+<td><strong>Divisão</strong></td>
+<td><code>x / x</code></td>
+<td>resto = <code>0</code>, resultado = <code>1</code></td>
+</tr>
+<tr>
+<td><strong>Divisão</strong></td>
+<td><code>A / B em que A &lt; B</code></td>
+<td>resto = <code>A</code>, resultado = <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Além desses casos de canto direcionados, também geraremos 10.000 estímulos aleatórios. O objetivo dos testes aleatórios é avaliar o comportamento da ULA em condições intermediárias (ex: 273648 * 87263) que nosso cérebro não pensaria em testar, garantindo uma cobertura funcional muito mais ampla.</p>
+<h3 id="53-ambiente-de-verificacao-baseado-na-metodologia-uvm-universal-verification-methodology">5.3. Ambiente de Verificação baseado na Metodologia UVM (Universal Verification Methodology)</h3>
+<p>Não vamos construir nosso testbench "do zero" ou de forma ad-hoc. Embora os componentes sejam escritos "na mão" em Python, faremos isso adotando a arquitetura da UVM (Universal Verification Methodology). A UVM é o padrão da indústria para criar ambientes de verificação robustos, modulares e reutilizáveis.</p>
+<p>Isso nos dá uma arquitetura padronizada com componentes claros: <strong>Sequencer</strong> (gera dados), <strong>Driver</strong> (dirige o DUT), <strong>Monitor</strong> (coleta dados), <strong>Scoreboard</strong> (verifica dados) e <strong>Coverage</strong> (mede o progresso).</p>
+<p>Não entraremos nos detalhes profundos da metodologia, pois isso preencheria um curso inteiro. O código-fonte completo deste ambiente está disponível no repositório abaixo.</p>
+<p>Repositório: <a href="https://github.com/MarceloDaEnc/ALU_Verification">https://github.com/MarceloDaEnc/ALU_Verification</a></p>
+<p>Vamos analisar os 4 componentes Python mais importantes:</p>
+<h4 id="531-golden-model">5.3.1. Golden Model</h4>
+<p>Este é o nosso oráculo, a nossa "fonte da verdade". É uma função em Python que replica perfeitamente o comportamento esperado da ULA, bit a bit. Note como ele usa máscaras (<strong>MASK_32</strong>) para simular a aritmética de 32 bits do hardware, tratando estouros (carry, borrow) e casos de 64 bits (multiplicação) exatamente como o Verilog deveria fazer.</p>
+<p>O Scoreboard usará este modelo para comparar a saída do DUT.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span>
+<span class="normal"><a href="#__codelineno-1-12">12</a></span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span>
+<span class="normal"><a href="#__codelineno-1-14">14</a></span>
+<span class="normal"><a href="#__codelineno-1-15">15</a></span>
+<span class="normal"><a href="#__codelineno-1-16">16</a></span>
+<span class="normal"><a href="#__codelineno-1-17">17</a></span>
+<span class="normal"><a href="#__codelineno-1-18">18</a></span>
+<span class="normal"><a href="#__codelineno-1-19">19</a></span>
+<span class="normal"><a href="#__codelineno-1-20">20</a></span>
+<span class="normal"><a href="#__codelineno-1-21">21</a></span>
+<span class="normal"><a href="#__codelineno-1-22">22</a></span>
+<span class="normal"><a href="#__codelineno-1-23">23</a></span>
+<span class="normal"><a href="#__codelineno-1-24">24</a></span>
+<span class="normal"><a href="#__codelineno-1-25">25</a></span>
+<span class="normal"><a href="#__codelineno-1-26">26</a></span>
+<span class="normal"><a href="#__codelineno-1-27">27</a></span>
+<span class="normal"><a href="#__codelineno-1-28">28</a></span>
+<span class="normal"><a href="#__codelineno-1-29">29</a></span>
+<span class="normal"><a href="#__codelineno-1-30">30</a></span>
+<span class="normal"><a href="#__codelineno-1-31">31</a></span>
+<span class="normal"><a href="#__codelineno-1-32">32</a></span>
+<span class="normal"><a href="#__codelineno-1-33">33</a></span>
+<span class="normal"><a href="#__codelineno-1-34">34</a></span>
+<span class="normal"><a href="#__codelineno-1-35">35</a></span>
+<span class="normal"><a href="#__codelineno-1-36">36</a></span>
+<span class="normal"><a href="#__codelineno-1-37">37</a></span>
+<span class="normal"><a href="#__codelineno-1-38">38</a></span>
+<span class="normal"><a href="#__codelineno-1-39">39</a></span>
+<span class="normal"><a href="#__codelineno-1-40">40</a></span>
+<span class="normal"><a href="#__codelineno-1-41">41</a></span>
+<span class="normal"><a href="#__codelineno-1-42">42</a></span>
+<span class="normal"><a href="#__codelineno-1-43">43</a></span>
+<span class="normal"><a href="#__codelineno-1-44">44</a></span>
+<span class="normal"><a href="#__codelineno-1-45">45</a></span>
+<span class="normal"><a href="#__codelineno-1-46">46</a></span>
+<span class="normal"><a href="#__codelineno-1-47">47</a></span>
+<span class="normal"><a href="#__codelineno-1-48">48</a></span>
+<span class="normal"><a href="#__codelineno-1-49">49</a></span>
+<span class="normal"><a href="#__codelineno-1-50">50</a></span>
+<span class="normal"><a href="#__codelineno-1-51">51</a></span>
+<span class="normal"><a href="#__codelineno-1-52">52</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">alu_32_bit_golden_model</span><span class="p">(</span><span class="n">opcode_in</span><span class="p">,</span> <span class="n">A_in</span><span class="p">,</span> <span class="n">B_in</span><span class="p">):</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>    <span class="n">MASK_32</span> <span class="o">=</span> <span class="mh">0xFFFFFFFF</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a>    <span class="n">A</span> <span class="o">=</span> <span class="n">A_in</span> <span class="o">&amp;</span> <span class="n">MASK_32</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a>    <span class="n">B</span> <span class="o">=</span> <span class="n">B_in</span> <span class="o">&amp;</span> <span class="n">MASK_32</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a>    <span class="c1"># Inicialização das saídas</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a>    <span class="n">result_out_low</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a>    <span class="n">result_out_hi</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a>    <span class="n">carry</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a>    <span class="n">borrow</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a>    <span class="n">error_out</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13"></a>    <span class="c1"># ---------------------------------</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14"></a>    <span class="c1"># Simulação do &#39;case (opcode_in)&#39;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15"></a>    <span class="c1"># ---------------------------------</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17"></a>    <span class="k">if</span> <span class="n">opcode_in</span> <span class="o">==</span> <span class="mb">0b00</span><span class="p">:</span>  <span class="c1"># ADD: {carry, result_out_low} &lt;= A_in + B_in</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18"></a>        <span class="n">full_sum</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">B</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19"></a>        <span class="n">result_out_low</span> <span class="o">=</span> <span class="n">full_sum</span> <span class="o">&amp;</span> <span class="n">MASK_32</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20"></a>        <span class="n">carry</span> <span class="o">=</span> <span class="p">(</span><span class="n">full_sum</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22"></a>    <span class="k">elif</span> <span class="n">opcode_in</span> <span class="o">==</span> <span class="mb">0b01</span><span class="p">:</span>  <span class="c1"># SUB: {borrow, result_out_low} &lt;= A_in - B_in</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23"></a>        <span class="n">result_out_low</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span> <span class="o">-</span> <span class="n">B</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">MASK_32</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24"></a>        <span class="n">borrow</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">A</span> <span class="o">&lt;</span> <span class="n">B</span> <span class="k">else</span> <span class="mi">0</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26"></a>    <span class="k">elif</span> <span class="n">opcode_in</span> <span class="o">==</span> <span class="mb">0b10</span><span class="p">:</span>  <span class="c1"># MUL: {result_out_hi, result_out_low} &lt;= A_in * B_in</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27"></a>        <span class="n">full_mul</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28"></a>        <span class="n">result_out_low</span> <span class="o">=</span> <span class="n">full_mul</span> <span class="o">&amp;</span> <span class="n">MASK_32</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29"></a>        <span class="n">result_out_hi</span> <span class="o">=</span> <span class="p">(</span><span class="n">full_mul</span> <span class="o">&gt;&gt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">MASK_32</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31"></a>    <span class="k">elif</span> <span class="n">opcode_in</span> <span class="o">==</span> <span class="mb">0b11</span><span class="p">:</span>  <span class="c1"># DIV: {Resto, Quociente}</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32"></a>        <span class="k">if</span> <span class="n">B</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33"></a>            <span class="c1"># Erro: Divisão por zero</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34"></a>            <span class="n">error_out</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35"></a>            <span class="n">result_out_low</span> <span class="o">=</span> <span class="kc">None</span> 
+<a id="__codelineno-1-36" name="__codelineno-1-36"></a>            <span class="n">result_out_hi</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38"></a>            <span class="n">result_out_low</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span> <span class="o">//</span> <span class="n">B</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">MASK_32</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39"></a>            <span class="n">result_out_hi</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span> <span class="o">%</span> <span class="n">B</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">MASK_32</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41"></a>    <span class="k">else</span><span class="p">:</span>  <span class="c1"># default:</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42"></a>        <span class="n">result_out_low</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43"></a>        <span class="n">result_out_hi</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44"></a>
+<a id="__codelineno-1-45" name="__codelineno-1-45"></a>    <span class="c1"># Retorna um dicionário para facilitar a verificação</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46"></a>    <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47"></a>        <span class="s2">&quot;result_out_low&quot;</span><span class="p">:</span> <span class="n">result_out_low</span><span class="p">,</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48"></a>        <span class="s2">&quot;result_out_hi&quot;</span><span class="p">:</span> <span class="n">result_out_hi</span><span class="p">,</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49"></a>        <span class="s2">&quot;carry&quot;</span><span class="p">:</span> <span class="n">carry</span><span class="p">,</span>
+<a id="__codelineno-1-50" name="__codelineno-1-50"></a>        <span class="s2">&quot;borrow&quot;</span><span class="p">:</span> <span class="n">borrow</span><span class="p">,</span>
+<a id="__codelineno-1-51" name="__codelineno-1-51"></a>        <span class="s2">&quot;error_out&quot;</span><span class="p">:</span> <span class="n">error_out</span>
+<a id="__codelineno-1-52" name="__codelineno-1-52"></a>    <span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h4 id="532-sequencer">5.3.2. Sequencer</h4>
+<p>O Sequencer é o cérebro do testbench. Ele é responsável por gerar as transações de teste (<strong>SeqItem</strong>) e enviá-las ao <strong>Driver</strong>. Nossa sequência principal, <strong>ULACoverageSeq</strong>, faz duas coisas:</p>
+<ol>
+<li>
+<p>Primeiro, ela envia manualmente (um por um) todos os 11 corner cases que identificamos em nossa tabela de verificação.</p>
+</li>
+<li>
+<p>Depois, ela entra em um loop e gera 10.000 transações com valores de A, B e opcode totalmente aleatórios.</p>
+</li>
+</ol>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span>
+<span class="normal"><a href="#__codelineno-2-20">20</a></span>
+<span class="normal"><a href="#__codelineno-2-21">21</a></span>
+<span class="normal"><a href="#__codelineno-2-22">22</a></span>
+<span class="normal"><a href="#__codelineno-2-23">23</a></span>
+<span class="normal"><a href="#__codelineno-2-24">24</a></span>
+<span class="normal"><a href="#__codelineno-2-25">25</a></span>
+<span class="normal"><a href="#__codelineno-2-26">26</a></span>
+<span class="normal"><a href="#__codelineno-2-27">27</a></span>
+<span class="normal"><a href="#__codelineno-2-28">28</a></span>
+<span class="normal"><a href="#__codelineno-2-29">29</a></span>
+<span class="normal"><a href="#__codelineno-2-30">30</a></span>
+<span class="normal"><a href="#__codelineno-2-31">31</a></span>
+<span class="normal"><a href="#__codelineno-2-32">32</a></span>
+<span class="normal"><a href="#__codelineno-2-33">33</a></span>
+<span class="normal"><a href="#__codelineno-2-34">34</a></span>
+<span class="normal"><a href="#__codelineno-2-35">35</a></span>
+<span class="normal"><a href="#__codelineno-2-36">36</a></span>
+<span class="normal"><a href="#__codelineno-2-37">37</a></span>
+<span class="normal"><a href="#__codelineno-2-38">38</a></span>
+<span class="normal"><a href="#__codelineno-2-39">39</a></span>
+<span class="normal"><a href="#__codelineno-2-40">40</a></span>
+<span class="normal"><a href="#__codelineno-2-41">41</a></span>
+<span class="normal"><a href="#__codelineno-2-42">42</a></span>
+<span class="normal"><a href="#__codelineno-2-43">43</a></span>
+<span class="normal"><a href="#__codelineno-2-44">44</a></span>
+<span class="normal"><a href="#__codelineno-2-45">45</a></span>
+<span class="normal"><a href="#__codelineno-2-46">46</a></span>
+<span class="normal"><a href="#__codelineno-2-47">47</a></span>
+<span class="normal"><a href="#__codelineno-2-48">48</a></span>
+<span class="normal"><a href="#__codelineno-2-49">49</a></span>
+<span class="normal"><a href="#__codelineno-2-50">50</a></span>
+<span class="normal"><a href="#__codelineno-2-51">51</a></span>
+<span class="normal"><a href="#__codelineno-2-52">52</a></span>
+<span class="normal"><a href="#__codelineno-2-53">53</a></span>
+<span class="normal"><a href="#__codelineno-2-54">54</a></span>
+<span class="normal"><a href="#__codelineno-2-55">55</a></span>
+<span class="normal"><a href="#__codelineno-2-56">56</a></span>
+<span class="normal"><a href="#__codelineno-2-57">57</a></span>
+<span class="normal"><a href="#__codelineno-2-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyuvm</span><span class="w"> </span><span class="kn">import</span> <span class="n">uvm_sequence</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.seq_item</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqItem</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">ULACoverageSeq</span><span class="p">(</span><span class="n">uvm_sequence</span><span class="p">):</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="sd">    Generates a sequence that covers all bins in CoverageBins.</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;carry_sum&quot;</span><span class="p">,</span> <span class="mi">4294967295</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;sum_of_zeros&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;negative_subtraction&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;self_subtraction&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;mul_truncation&quot;</span><span class="p">,</span> <span class="mi">4294967295</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30"></a>
+<a id="__codelineno-2-31" name="__codelineno-2-31"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;mul_full_precision&quot;</span><span class="p">,</span> <span class="mi">4294967295</span><span class="p">,</span> <span class="mi">4294967295</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34"></a>
+<a id="__codelineno-2-35" name="__codelineno-2-35"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;div_by_zero&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;div_zero_numerator&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42"></a>
+<a id="__codelineno-2-43" name="__codelineno-2-43"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;div_by_one&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<a id="__codelineno-2-44" name="__codelineno-2-44"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-45" name="__codelineno-2-45"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-46" name="__codelineno-2-46"></a>
+<a id="__codelineno-2-47" name="__codelineno-2-47"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;div_self&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<a id="__codelineno-2-48" name="__codelineno-2-48"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-49" name="__codelineno-2-49"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-50" name="__codelineno-2-50"></a>
+<a id="__codelineno-2-51" name="__codelineno-2-51"></a>        <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;div_small_numerator&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-2-52" name="__codelineno-2-52"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-53" name="__codelineno-2-53"></a>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-54" name="__codelineno-2-54"></a>
+<a id="__codelineno-2-55" name="__codelineno-2-55"></a>        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+<a id="__codelineno-2-56" name="__codelineno-2-56"></a>            <span class="n">item</span> <span class="o">=</span> <span class="n">SeqItem</span><span class="p">(</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4294967295</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4294967295</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-2-57" name="__codelineno-2-57"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-2-58" name="__codelineno-2-58"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">finish_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<h4 id="533-scoreboard">5.3.3. Scoreboard</h4>
+<p>O Scoreboard é o juiz. Ele recebe as transações que foram enviadas ao DUT e também os resultados que foram coletados do DUT.</p>
+<p>Seu trabalho é, para cada transação:</p>
+<ol>
+<li>
+<p>Pegar os dados de entrada (item.opcode, item.A, item.B).</p>
+</li>
+<li>
+<p>Calcular o resultado esperado usando o alu_32_bit_golden_model.</p>
+</li>
+<li>
+<p>Pegar o resultado real que veio do DUT (actual_out_low, actual_out_hi, ...).</p>
+</li>
+<li>
+<p>Comparar os dois.</p>
+</li>
+<li>
+<p>Imprimir <strong>PASSED</strong> ou <strong>FAILED</strong> e contar o número de falhas.</p>
+</li>
+</ol>
+<p>Ele também trata de forma inteligente os valores <strong>'X'</strong> (indefinidos) do Verilog, que ocorrem na divisão por zero, comparando-os com o None do Python.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span>
+<span class="normal"><a href="#__codelineno-3-11">11</a></span>
+<span class="normal"><a href="#__codelineno-3-12">12</a></span>
+<span class="normal"><a href="#__codelineno-3-13">13</a></span>
+<span class="normal"><a href="#__codelineno-3-14">14</a></span>
+<span class="normal"><a href="#__codelineno-3-15">15</a></span>
+<span class="normal"><a href="#__codelineno-3-16">16</a></span>
+<span class="normal"><a href="#__codelineno-3-17">17</a></span>
+<span class="normal"><a href="#__codelineno-3-18">18</a></span>
+<span class="normal"><a href="#__codelineno-3-19">19</a></span>
+<span class="normal"><a href="#__codelineno-3-20">20</a></span>
+<span class="normal"><a href="#__codelineno-3-21">21</a></span>
+<span class="normal"><a href="#__codelineno-3-22">22</a></span>
+<span class="normal"><a href="#__codelineno-3-23">23</a></span>
+<span class="normal"><a href="#__codelineno-3-24">24</a></span>
+<span class="normal"><a href="#__codelineno-3-25">25</a></span>
+<span class="normal"><a href="#__codelineno-3-26">26</a></span>
+<span class="normal"><a href="#__codelineno-3-27">27</a></span>
+<span class="normal"><a href="#__codelineno-3-28">28</a></span>
+<span class="normal"><a href="#__codelineno-3-29">29</a></span>
+<span class="normal"><a href="#__codelineno-3-30">30</a></span>
+<span class="normal"><a href="#__codelineno-3-31">31</a></span>
+<span class="normal"><a href="#__codelineno-3-32">32</a></span>
+<span class="normal"><a href="#__codelineno-3-33">33</a></span>
+<span class="normal"><a href="#__codelineno-3-34">34</a></span>
+<span class="normal"><a href="#__codelineno-3-35">35</a></span>
+<span class="normal"><a href="#__codelineno-3-36">36</a></span>
+<span class="normal"><a href="#__codelineno-3-37">37</a></span>
+<span class="normal"><a href="#__codelineno-3-38">38</a></span>
+<span class="normal"><a href="#__codelineno-3-39">39</a></span>
+<span class="normal"><a href="#__codelineno-3-40">40</a></span>
+<span class="normal"><a href="#__codelineno-3-41">41</a></span>
+<span class="normal"><a href="#__codelineno-3-42">42</a></span>
+<span class="normal"><a href="#__codelineno-3-43">43</a></span>
+<span class="normal"><a href="#__codelineno-3-44">44</a></span>
+<span class="normal"><a href="#__codelineno-3-45">45</a></span>
+<span class="normal"><a href="#__codelineno-3-46">46</a></span>
+<span class="normal"><a href="#__codelineno-3-47">47</a></span>
+<span class="normal"><a href="#__codelineno-3-48">48</a></span>
+<span class="normal"><a href="#__codelineno-3-49">49</a></span>
+<span class="normal"><a href="#__codelineno-3-50">50</a></span>
+<span class="normal"><a href="#__codelineno-3-51">51</a></span>
+<span class="normal"><a href="#__codelineno-3-52">52</a></span>
+<span class="normal"><a href="#__codelineno-3-53">53</a></span>
+<span class="normal"><a href="#__codelineno-3-54">54</a></span>
+<span class="normal"><a href="#__codelineno-3-55">55</a></span>
+<span class="normal"><a href="#__codelineno-3-56">56</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">cocotb</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyuvm</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">alu_32_bit_golden_model</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">Scoreboard</span><span class="p">(</span><span class="n">uvm_component</span><span class="p">):</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="sd">    Compares expected results with actual DUT results.</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">build_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cmd_fifo</span> <span class="o">=</span> <span class="n">uvm_tlm_analysis_fifo</span><span class="p">(</span><span class="s2">&quot;cmd_fifo&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">result_fifo</span> <span class="o">=</span> <span class="n">uvm_tlm_analysis_fifo</span><span class="p">(</span><span class="s2">&quot;result_fifo&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cmd_get_port</span> <span class="o">=</span> <span class="n">uvm_get_port</span><span class="p">(</span><span class="s2">&quot;cmd_get_port&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">result_get_port</span> <span class="o">=</span> <span class="n">uvm_get_port</span><span class="p">(</span><span class="s2">&quot;result_get_port&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cmd_export</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd_fifo</span><span class="o">.</span><span class="n">analysis_export</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">result_export</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_fifo</span><span class="o">.</span><span class="n">analysis_export</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">fail_count</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">connect_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cmd_get_port</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd_fifo</span><span class="o">.</span><span class="n">get_export</span><span class="p">)</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">result_get_port</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_fifo</span><span class="o">.</span><span class="n">get_export</span><span class="p">)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23"></a>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24"></a>            <span class="n">item</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd_get_port</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25"></a>            <span class="p">(</span><span class="n">actual_out_low</span><span class="p">,</span> <span class="n">actual_out_hi</span><span class="p">,</span> <span class="n">actual_carry</span><span class="p">,</span> <span class="n">actual_borrow</span><span class="p">,</span> <span class="n">actual_error</span><span class="p">)</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_get_port</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26"></a>            <span class="k">if</span> <span class="p">(</span><span class="n">actual_out_low</span> <span class="o">==</span> <span class="s1">&#39;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#39;</span> <span class="ow">or</span> <span class="n">actual_out_hi</span> <span class="o">==</span> <span class="s1">&#39;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&#39;</span> <span class="ow">or</span> <span class="n">actual_carry</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span> <span class="ow">or</span> <span class="n">actual_borrow</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span> <span class="ow">or</span> <span class="n">actual_error</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">):</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27"></a>                <span class="n">actual_out_low</span> <span class="o">=</span> <span class="n">actual_out_hi</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28"></a>                <span class="n">actual_carry</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29"></a>                <span class="n">actual_borrow</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30"></a>                <span class="n">actual_error</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31"></a>            <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32"></a>                <span class="n">actual_out_low</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">actual_out_low</span><span class="p">)</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33"></a>                <span class="n">actual_out_hi</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">actual_out_hi</span><span class="p">)</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34"></a>                <span class="n">actual_carry</span>     <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">actual_carry</span><span class="p">)</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35"></a>                <span class="n">actual_borrow</span>    <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">actual_borrow</span><span class="p">)</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36"></a>                <span class="n">actual_error</span>     <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">actual_error</span><span class="p">)</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37"></a>            <span class="n">golden_outputs</span> <span class="o">=</span> <span class="n">alu_32_bit_golden_model</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">opcode</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">B</span><span class="p">)</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38"></a>            <span class="k">if</span> <span class="p">(</span><span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;result_out_low&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">actual_out_low</span> <span class="ow">and</span> <span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;result_out_hi&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">actual_out_hi</span> <span class="ow">and</span> <span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;carry&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">actual_carry</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39"></a>                <span class="ow">and</span> <span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;borrow&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">actual_borrow</span> <span class="ow">and</span> <span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;error_out&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">actual_error</span><span class="p">):</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ PASSED: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41"></a>            <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ FAILED: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44"></a>                    <span class="sa">f</span><span class="s2">&quot;    └─ Expected: Result_Low=</span><span class="si">{</span><span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;result_out_low&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Result_Hi=</span><span class="si">{</span><span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;result_out_hi&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Carry=</span><span class="si">{</span><span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;carry&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Borrow=</span><span class="si">{</span><span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;borrow&quot;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Error=</span><span class="si">{</span><span class="n">golden_outputs</span><span class="p">[</span><span class="s2">&quot;error_out&quot;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45"></a>                    <span class="sa">f</span><span class="s2">&quot;       Got:      Result_Low=</span><span class="si">{</span><span class="n">actual_out_low</span><span class="si">}</span><span class="s2">, Result_Hi=</span><span class="si">{</span><span class="n">actual_out_hi</span><span class="si">}</span><span class="s2">, Carry=</span><span class="si">{</span><span class="n">actual_carry</span><span class="si">}</span><span class="s2">, Borrow=</span><span class="si">{</span><span class="n">actual_borrow</span><span class="si">}</span><span class="s2">, Error=</span><span class="si">{</span><span class="n">actual_error</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46"></a>                <span class="p">)</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">fail_count</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48"></a>
+<a id="__codelineno-3-49" name="__codelineno-3-49"></a>
+<a id="__codelineno-3-50" name="__codelineno-3-50"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">report_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints a final summary of the test results.&quot;&quot;&quot;</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52"></a>        <span class="n">cocotb</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">+--------------------+&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53"></a>        <span class="n">cocotb</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| Final Fail Count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fail_count</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2"> |&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54"></a>        <span class="n">cocotb</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;+--------------------+&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56"></a>            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fail_count</span><span class="si">}</span><span class="s2"> failures detected in scoreboard&quot;</span>
+</code></pre></div></td></tr></table></div>
+<h4 id="534-coverage">5.3.4. Coverage</h4>
+<p>Este é o componente final e crucial. Ele responde à pergunta: "Nós testamos tudo o que planejamos testar?".</p>
+<p>Ele não se importa se o teste passou ou falhou (esse é o trabalho do Scoreboard). Ele apenas rastreia quais tipos de transações (nossos corner cases) foram executados.</p>
+<p>Ele "escuta" os itens que passam e os adiciona a um <strong>set()</strong> do Python. No final da simulação (<strong>report_phase</strong>), ele compara o set de itens que vimos com a lista <strong>CoverageBins</strong> de itens que queríamos ver. Se algum corner case não foi executado, o teste falha, mesmo que todos os outros 10.000 testes aleatórios tenham passado.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-4-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-4-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-4-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-4-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-4-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-4-10">10</a></span>
+<span class="normal"><a href="#__codelineno-4-11">11</a></span>
+<span class="normal"><a href="#__codelineno-4-12">12</a></span>
+<span class="normal"><a href="#__codelineno-4-13">13</a></span>
+<span class="normal"><a href="#__codelineno-4-14">14</a></span>
+<span class="normal"><a href="#__codelineno-4-15">15</a></span>
+<span class="normal"><a href="#__codelineno-4-16">16</a></span>
+<span class="normal"><a href="#__codelineno-4-17">17</a></span>
+<span class="normal"><a href="#__codelineno-4-18">18</a></span>
+<span class="normal"><a href="#__codelineno-4-19">19</a></span>
+<span class="normal"><a href="#__codelineno-4-20">20</a></span>
+<span class="normal"><a href="#__codelineno-4-21">21</a></span>
+<span class="normal"><a href="#__codelineno-4-22">22</a></span>
+<span class="normal"><a href="#__codelineno-4-23">23</a></span>
+<span class="normal"><a href="#__codelineno-4-24">24</a></span>
+<span class="normal"><a href="#__codelineno-4-25">25</a></span>
+<span class="normal"><a href="#__codelineno-4-26">26</a></span>
+<span class="normal"><a href="#__codelineno-4-27">27</a></span>
+<span class="normal"><a href="#__codelineno-4-28">28</a></span>
+<span class="normal"><a href="#__codelineno-4-29">29</a></span>
+<span class="normal"><a href="#__codelineno-4-30">30</a></span>
+<span class="normal"><a href="#__codelineno-4-31">31</a></span>
+<span class="normal"><a href="#__codelineno-4-32">32</a></span>
+<span class="normal"><a href="#__codelineno-4-33">33</a></span>
+<span class="normal"><a href="#__codelineno-4-34">34</a></span>
+<span class="normal"><a href="#__codelineno-4-35">35</a></span>
+<span class="normal"><a href="#__codelineno-4-36">36</a></span>
+<span class="normal"><a href="#__codelineno-4-37">37</a></span>
+<span class="normal"><a href="#__codelineno-4-38">38</a></span>
+<span class="normal"><a href="#__codelineno-4-39">39</a></span>
+<span class="normal"><a href="#__codelineno-4-40">40</a></span>
+<span class="normal"><a href="#__codelineno-4-41">41</a></span>
+<span class="normal"><a href="#__codelineno-4-42">42</a></span>
+<span class="normal"><a href="#__codelineno-4-43">43</a></span>
+<span class="normal"><a href="#__codelineno-4-44">44</a></span>
+<span class="normal"><a href="#__codelineno-4-45">45</a></span>
+<span class="normal"><a href="#__codelineno-4-46">46</a></span>
+<span class="normal"><a href="#__codelineno-4-47">47</a></span>
+<span class="normal"><a href="#__codelineno-4-48">48</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pyuvm</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.seq_item</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeqItem</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.defs</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operation</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="n">CoverageBins</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">CARRY_SUM</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">SUM_OF_ZEROS</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">NEGATIVE_SUBTRACTION</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">SELF_SUBTRACTION</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">MUL_TRUNCATION</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">MUL_FULL_PRECISION</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">DIV_ZERO_NUMERATOR</span><span class="p">,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">DIV_BY_ZERO</span><span class="p">,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">DIV_BY_ONE</span><span class="p">,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">DIV_SELF</span><span class="p">,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16"></a>    <span class="n">Operation</span><span class="o">.</span><span class="n">DIV_SMALLER_NUMERATOR</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17"></a><span class="p">]</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19"></a><span class="k">class</span><span class="w"> </span><span class="nc">Coverage</span><span class="p">(</span><span class="n">uvm_subscriber</span><span class="p">):</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21"></a><span class="sd">    Collects and verifies functional coverage for the PIE environment.</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">end_of_elaboration_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cvg</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25"></a>
+<a id="__codelineno-4-26" name="__codelineno-4-26"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">SeqItem</span><span class="p">):</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28"></a>            <span class="n">coverage_bin</span> <span class="o">=</span> <span class="p">(</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29"></a>                <span class="n">item</span><span class="o">.</span><span class="n">type</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30"></a>            <span class="p">)</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">cvg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">coverage_bin</span><span class="p">)</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32"></a>
+<a id="__codelineno-4-33" name="__codelineno-4-33"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">report_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35"></a>            <span class="n">disable_errors</span> <span class="o">=</span> <span class="n">ConfigDB</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;DISABLE_COVERAGE_ERRORS&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36"></a>        <span class="k">except</span> <span class="n">UVMConfigItemNotFound</span><span class="p">:</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37"></a>            <span class="n">disable_errors</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38"></a>
+<a id="__codelineno-4-39" name="__codelineno-4-39"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">disable_errors</span><span class="p">:</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40"></a>            <span class="n">coverage_bins_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">CoverageBins</span><span class="p">)</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41"></a>            <span class="n">missed_bins</span> <span class="o">=</span> <span class="n">coverage_bins_set</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cvg</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42"></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missed_bins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Functional coverage error!&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  -&gt; Bins not covered: </span><span class="si">{</span><span class="n">missed_bins</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-45" name="__codelineno-4-45"></a>                <span class="k">assert</span> <span class="kc">False</span>
+<a id="__codelineno-4-46" name="__codelineno-4-46"></a>            <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-4-47" name="__codelineno-4-47"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✅ Functional coverage reached all bins.&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-48" name="__codelineno-4-48"></a>                <span class="k">assert</span> <span class="kc">True</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="54-resultados">5.4. Resultados</h3>
+<p>A execução do ambiente de verificação gera logs detalhados, como mostra o snippet abaixo. Podemos ver o <strong>Scoreboard</strong> validando com <strong>✅ PASSED</strong> cada uma das 10.011 transações (os 11 corner cases e as 10.000 aleatórias), o <strong>Coverage</strong> reportando que todos os bins (casos de canto) foram atingidos, e o sumário final do <strong>cocotb</strong> indicando <strong>Final Fail Count: 0</strong>.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span>
+<span class="normal"><a href="#__codelineno-5-12">12</a></span>
+<span class="normal"><a href="#__codelineno-5-13">13</a></span>
+<span class="normal"><a href="#__codelineno-5-14">14</a></span>
+<span class="normal"><a href="#__codelineno-5-15">15</a></span>
+<span class="normal"><a href="#__codelineno-5-16">16</a></span>
+<span class="normal"><a href="#__codelineno-5-17">17</a></span>
+<span class="normal"><a href="#__codelineno-5-18">18</a></span>
+<span class="normal"><a href="#__codelineno-5-19">19</a></span>
+<span class="normal"><a href="#__codelineno-5-20">20</a></span>
+<span class="normal"><a href="#__codelineno-5-21">21</a></span>
+<span class="normal"><a href="#__codelineno-5-22">22</a></span>
+<span class="normal"><a href="#__codelineno-5-23">23</a></span>
+<span class="normal"><a href="#__codelineno-5-24">24</a></span>
+<span class="normal"><a href="#__codelineno-5-25">25</a></span>
+<span class="normal"><a href="#__codelineno-5-26">26</a></span>
+<span class="normal"><a href="#__codelineno-5-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="m">5200780</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x696B5381<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0x1663E737<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">0</span><span class="w">     </span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="m">5201300</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x984E1486<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0x7CD362B5<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">3</span><span class="w">     </span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="m">5201820</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0xF86AFB3C<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0xE33138D6<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">2</span><span class="w">     </span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="m">5202340</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0xF096B0F8<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0xE1B58BD<span class="w">  </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">2</span><span class="w">     </span>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="m">5202860</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0xF0AAF75D<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0xF587E1D9<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">1</span><span class="w">     </span>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="m">5203380</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x1D81C37B<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0xA7DDF220<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">0</span><span class="w">     </span>
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="m">5203900</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x9908E520<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0x16818DDC<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">3</span><span class="w">     </span>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="m">5204420</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x1494B710<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0xEBEBBA8C<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">2</span><span class="w">     </span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="m">5204940</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x54CBDF2<span class="w">  </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0xE4378B68<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">3</span><span class="w">     </span>
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="m">5205460</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x738B957A<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0x1B4552B4<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">0</span><span class="w">     </span>
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="m">5205980</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x6F26EB06<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0x7EB17FA6<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">3</span><span class="w">     </span>
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="m">5206500</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x2D9E521A<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0x2687A9F<span class="w">  </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">1</span><span class="w">     </span>
+<a id="__codelineno-5-13" name="__codelineno-5-13"></a><span class="m">5207020</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0x909AC5DA<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0xAE02F006<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">2</span><span class="w">     </span>
+<a id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="m">5207540</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..ULA/components/scoreboard.py<span class="o">(</span><span class="m">40</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.scoreboard<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>PASSED:<span class="w"> </span>A:<span class="w"> </span>0xFF926233<span class="w"> </span><span class="p">|</span><span class="w"> </span>B:<span class="w"> </span>0xA8DE4009<span class="w"> </span><span class="p">|</span><span class="w"> </span>OpCode:<span class="w"> </span><span class="m">0</span><span class="w">     </span>
+<a id="__codelineno-5-15" name="__codelineno-5-15"></a><span class="m">5307540</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>..M_ULA/components/coverage.py<span class="o">(</span><span class="m">47</span><span class="o">)</span><span class="w"> </span><span class="o">[</span>uvm_test_top.env.coverage<span class="o">]</span>:<span class="w"> </span>✅<span class="w"> </span>Functional<span class="w"> </span>coverage<span class="w"> </span>reached<span class="w"> </span>all<span class="w"> </span>bins.
+<a id="__codelineno-5-16" name="__codelineno-5-16"></a><span class="m">5307540</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>cocotb<span class="w">                             </span>
+<a id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="w">                                                         </span>+--------------------+
+<a id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="m">5307540</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>cocotb<span class="w">                             </span><span class="p">|</span><span class="w"> </span>Final<span class="w"> </span>Fail<span class="w"> </span>Count:<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="m">5307540</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>cocotb<span class="w">                             </span>+--------------------+
+<a id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="m">5307540</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>cocotb.regression<span class="w">                  </span>ULATest<span class="w"> </span>passed
+<a id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="m">5307540</span>.00ns<span class="w"> </span>INFO<span class="w">     </span>cocotb.regression<span class="w">                  </span>**************************************************************************************
+<a id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="w">                                                         </span>**<span class="w"> </span>TEST<span class="w">                          </span>STATUS<span class="w">  </span>SIM<span class="w"> </span>TIME<span class="w"> </span><span class="o">(</span>ns<span class="o">)</span><span class="w">  </span>REAL<span class="w"> </span>TIME<span class="w"> </span><span class="o">(</span>s<span class="o">)</span><span class="w">  </span>RATIO<span class="w"> </span><span class="o">(</span>ns/s<span class="o">)</span><span class="w"> </span>**
+<a id="__codelineno-5-23" name="__codelineno-5-23"></a><span class="w">                                                         </span>**************************************************************************************
+<a id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="w">                                                         </span>**<span class="w"> </span>tests.test_ULA.ULATest<span class="w">         </span>PASS<span class="w">     </span><span class="m">5307540</span>.00<span class="w">           </span><span class="m">6</span>.77<span class="w">     </span><span class="m">784140</span>.29<span class="w">  </span>**
+<a id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="w">                                                         </span>**************************************************************************************
+<a id="__codelineno-5-26" name="__codelineno-5-26"></a><span class="w">                                                         </span>**<span class="w"> </span><span class="nv">TESTS</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">PASS</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">FAIL</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">SKIP</span><span class="o">=</span><span class="m">0</span><span class="w">            </span><span class="m">5307540</span>.00<span class="w">           </span><span class="m">6</span>.82<span class="w">     </span><span class="m">778361</span>.96<span class="w">  </span>**
+<a id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="w">                                                         </span>**************************************************************************************
+</code></pre></div></td></tr></table></div>
+<p>Além da saída de log, a simulação também gera um arquivo <strong>alu_32_bit.fst</strong>. Este arquivo de waveform (forma de onda) permite uma inspeção visual ciclo-a-ciclo do comportamento do DUT.</p>
+<p>Para analisar visualmente os corner cases (e qualquer outra transação), provando que o DUT se comportou exatamente como o Golden Model previu, o arquivo <strong>alu_32_bit.fst</strong> pode ser acessado no repositório do projeto e aberto usando um visualizador de waveforms gratuito, como o GtkWave.</p>
+<h2 id="consideracoes-finais">Considerações Finais</h2>
+<p>Nesta jornada, passamos da filosofia da verificação ("Por que testar?") para a prática ("Como testar?"). Construímos um ambiente de verificação robusto e moderno usando Python, Cocotb e a metodologia UVM.</p>
+<p>Os pilares deste ambiente foram:</p>
+<ol>
+<li>
+<p>Um <strong>Golden Model</strong> em Python, que atua como a "fonte da verdade" inquestionável.</p>
+</li>
+<li>
+<p>Um <strong>Sequencer</strong> que combina testes direcionados (os corner cases) com a força bruta de milhares de testes aleatórios.</p>
+</li>
+<li>
+<p>Um <strong>Scoreboard</strong> automatizado, que atua como um juiz incansável, comparando o DUT com o Golden Model a cada ciclo.</p>
+</li>
+<li>
+<p>Uma medição de <strong>Coverage</strong>, que garante que não apenas testamos muito, mas que testamos as coisas certas.</p>
+</li>
+</ol>
+<p>Ao rodar mais de 10.000 testes e focar especificamente nos pontos de falha (overflow, underflow, divisão por zero, limites de 64 bits), alcançamos um nível de confiança no design que seria impossível de obter com simulações manuais simples.</p>
+<p>Isso demonstra o princípio central da verificação: não basta provar que o design funciona no "caminho feliz"; é preciso provar, metodicamente, que ele não falha em nenhum dos milhares de "caminhos infelizes". Só então podemos afirmar que o design está, de fato, correto.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Rodapé" >
+        
+          
+          <a href="../Sim/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Simulações">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Simulações
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../FPGA/" class="md-footer__link md-footer__link--next" aria-label="Próximo: FPGA">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Próximo
+              </span>
+              <div class="md-ellipsis">
+                FPGA
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2025 <a href="https://vlab.dc.ufscar.br"  target="_blank" rel="noopener">QuestI0</a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/QuestIO42" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M202.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M496 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/questio42/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "content.footnote.tooltips"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
