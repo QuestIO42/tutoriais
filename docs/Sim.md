@@ -12,9 +12,9 @@ module adder(
 endmodule
 ```
 
-Vamos construir um *test bench* simples para testá-lo:
+Este código resulta em um somador simples de 4 bits, que pode ser sintetizado em hardware. Agora, vamos construir um *test bench* simples para testá-lo. O código do teste serve para simular o comportamento do somador, aplicando diferentes valores de entrada e observando a saída. 
 
-- O **design**, também chamado de *Design Under Test* (DUT) ou *Unit Under Test* (UUT) é o circuito que você escreveu;
+- O **design**, também chamado de *Design Under Test* (DUT) ou *Unit Under Test* (UUT) é o circuito que você escreveu, ele será instanciado dentro do *test bench*;
 - O **test bench** gera estímulos (sinais de entrada, como clock, reset, dados) e observa as respostas do DUT;
 - Dessa forma, você pode verificar se o circuito se comporta corretamente antes de gastar tempo e recursos na síntese e na gravação em hardware.
 
