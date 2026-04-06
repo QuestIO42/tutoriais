@@ -66,6 +66,20 @@ Se você quer se aprofundar na construção de um processador RISC-V, sugerimos 
 
 ### Chipyard
 
+Chipyard é um *framework* para projetar e avaliar *hardware* de sistemas completos. É composto por uma coleção de ferramentas e bibliotecas projetadas para fornecer 
+integração entre ferramentas de código aberto e comerciais para o desenvolvimento de *systems-on-chip*. O projeto tem uma [página dedicada](https://chipyard.readthedocs.io/en/latest/) à documentação, com guias e informações mais detalhadas do [repositório](https://github.com/ucb-bar/chipyard).
+
+O *framework* junta diversos projetos abertos chamados geradores RTL, responsáveis por gerar descrições RTL (*Register-Transfer Level*), escritas na linguagem `Verilog`. A geração de `Verilog`, como é comumente chamada, começa com código em `Scala` e, após uma cadeia de processos, acaba com o arquivo `Verilog`.
+Esta cadeia de processos utiliza algumas ferramentas, principalmente o `Chisel`, uma biblioteca para descrição de *hardware* incorporada em `Scala`; e o `FIRRTL`, uma biblioteca de representação intermediária para descrição RTL de projetos digitais.
+De forma resumida, o gerador RTL é escrito em `Scala` com o uso da biblioteca `Chisel`, o compilador `Chisel` transforma o gerador em uma saída `FIRRTL`, que por sua vez permite a manipulação de circuitos digitais para a geração do `Verilog`.
+
+Além dos tópicos estritamente relacionados à geração de `Verilog`, o *framework* também possui ferramentas para simulação, compilação e teste de códigos. 
+Dentre estas ferramentas, existe o repositório *riscv-tools*, uma coleção de cadeias de ferramentas de software usadas para desenvolver e executar *software* no ISA RISC-V.
+Na parte da simulação de `Verilog`, a principal ferramenta aberta utilizada é o `Verilator`. O *framework* fornece *wrappers* que constroem simuladores baseados no `Verilator` a partir de RTL gerado, permitindo a execução de programas RISC-V no simulador.
+Assim, é possível montar, compilar e testar programas para o ISA do RISC-V, tanto de forma a verificar o funcionamento do programa isolado (e.g. com simuladores de ISA, como `spike`), quanto de forma a simular a execução em um processador real, descrito em `Verilog`.
+
+-----
+
 ### Litex
 
 O framework LiteX fornece uma infraestrutura integrada para criar SoCs e integrar periféricos. Sendo capaz de criar sistemas completos baseados em FPGA.
