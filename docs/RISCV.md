@@ -205,6 +205,34 @@ $ spike build/my_hello.riscv
 Hello, World!
 ```
 
+#### Simulação com `Verilator`:
+
+`Verilator` é um simulador *open-source* de `Verilog`, utilizado no repositório como uma das ferramentas de simulação. Utilizaremos esta ferramenta pelo fato de ser aberta e por muitas partes estarem prontas.
+O diretório `sims/verilator` fornece *wrappers* que constroem simuladores a partir do RTL gerado, permitindo a execução de programas RISC-V no simulador.
+
+Dentro do diretório, apenas um `make` já constrói um simulador completo. A configuração padrão é a `RocketConfig`, que constrõe o SoC com o processador `Rocket`, um processador escalar de execução em ordem com 5 estágios. 
+
+```bash
+$ cd sims/verilator
+make
+```
+
+Após a execução de todas as etapas do `make`, um executável chamado `simulator-chipyard.harness-RocketConfig` será produzido. Este executável é o simulador compilado com base no projeto criado. Você pode então usar este executável para executar qualquer código compatível com RV64 (RISC-V de 64 bits).
+
+O arquivo `Makefile` possui várias regras que auxiliam o uso do executável, mas é possível utilizá-lo diretamente, passando apenas o binário como parâmetro.
+
+```bash
+$ ./simulator-chipyard.harness-RocketConfig $BASE/tests/build/my_hello.riscv
+[UART] UART0 is here (stdin/stdout).
+Hello, World!
+```
+
+Dentro de todas as regras, `run-binary` auxilia a utilização de várias opções dentro da simulação. Além de não ser necessário inserir o nome do executável, é possível selecionar a configuração, o binário, o carregamento de memória, etc.
+
+```bash
+$ make run-binary CONFIG=RocketConfig BINARY=$BASE/tests/build/my_hello.riscv LOADMEM=1
+```
+
 -----
 
 ### Litex
