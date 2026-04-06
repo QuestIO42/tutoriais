@@ -113,6 +113,98 @@ De forma resumida, o *setup* é feito através de três passos:
 
 Com todos os passos concluídos, é possível explorar de forma efetiva o repositório.
 
+#### Simulação de Códigos RISC-V
+
+A simulação da ISA é feita principalmente pela ferramenta `spike`, dentro do ambiente `conda` temos:
+
+```bash
+$ spike -h
+Spike RISC-V ISA Simulator 1.1.1-dev
+
+usage: spike [host options] <target program> [target options]
+Host Options:
+...
+```
+
+tente executar e ler todas as `Host Options`, pois existem diversas configurações úteis que podem servir como solução para um futuro problema.
+
+Para simular é preciso antes ter algum código, tomemos como exemplo um "`hello, world!`" simples em `C`:
+```c
+#include <stdio.h>
+
+int main(){
+    printf("Hello, World!\n");
+    return 0;
+}
+```
+
+Utilizando o `gcc` é possível compilar e executá-lo, assim:
+
+```bash
+$ gcc hello.c -o hello && file hello && ./hello 
+hello: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, not stripped
+Hello, World!
+```
+
+Porém, vemos que a ISA utilizada é diferente daquela que desejamos, RISC-V. Assim, de forma a compilar um código para RISC-V é necessário utilizar a `toolchain` específica:
+
+```bash
+$ riscv64-unknown-elf-gcc hello.c -o hello && file hello && ./hello 
+hello: ELF 64-bit LSB executable, UCB RISC-V, version 1 (SYSV), statically linked, not stripped
+bash: ./hello: cannot execute binary file: Exec format error
+```
+
+Agora o arquivo foi compilado na arquitetura `UCB RISC-V` como desejado, porém não foi possível executá-lo localmente, já que esta máquina possui outra arquitetura. Finalmente é hora de utilizar o `spike`, de forma a simular a execução do código `RISC-V`.
+
+```bash
+$ spike hello
+Access exception occurred while loading payload hello:
+Memory address 0x125e0 is invalid
+```
+
+Existe ainda um problema nesta simulação, só é possível executar um binário direto com o `spike` caso ele seja `baremetal`, caso contrário, é necessário utilizar outra ferramenta, o `proxy kernel` ou `pk`.
+
+```bash
+$ spike pk hello
+Hello, World!
+```
+
+Agora, é possível criar códigos em C, compilá-los para a arquitetura alvo desejada e simular a execução dos binários.
+
+##### Compilando Binários *Bare Metal*
+
+Existe um diretório na raiz do repositório, chamado `tests`, que permite a criação de binários *baremetal* a partir de códigos em `C`. O processo é feito por `cmake`, e o arquivo `CMakeLists.txt` traz a configuração do mesmo, além de uma documentação simples de uso:
+
+```bash
+# file:  CMakeLists.txt
+#
+# usage: 
+#   Edit "VARIABLES"-section to suit project requirements.
+#   Build instructions:
+#     cmake -S ./ -B ./build/ -D CMAKE_BUILD_TYPE=Debug
+#     cmake --build ./build/ --target all
+#   Cleaning:
+#     cmake --build ./build/ --target clean
+```
+
+Com o intuito de demonstrar como adicionar algum código nesta lista, vou utilizar o mesmo codigo em `C` de anteriormente, porém com o nome `my_hello.c`. Primeiro, é preciso adicionar o executável no `CMakeLists.txt`, através do comando `add_executable()`:
+
+```bash
+add_executable(my_hello my_hello.c)
+```
+Agora, com o arquivo dentro do diretório e configurado dentro do `CMakeLists`, basta seguir os passos de uso do `cmake`:
+
+```bash
+$ cmake -S ./ -B ./build/ -D CMAKE_BUILD_TYPE=Debug && cmake --build ./build/ --target all
+```
+
+Com todos os binários prontos, é possível utilizar o `spike` para simular a execução do binário *baremetal*:
+
+```bash
+$ spike build/my_hello.riscv 
+Hello, World!
+```
+
 -----
 
 ### Litex
