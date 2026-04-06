@@ -78,6 +78,41 @@ Dentre estas ferramentas, existe o repositório *riscv-tools*, uma coleção de 
 Na parte da simulação de `Verilog`, a principal ferramenta aberta utilizada é o `Verilator`. O *framework* fornece *wrappers* que constroem simuladores baseados no `Verilator` a partir de RTL gerado, permitindo a execução de programas RISC-V no simulador.
 Assim, é possível montar, compilar e testar programas para o ISA do RISC-V, tanto de forma a verificar o funcionamento do programa isolado (e.g. com simuladores de ISA, como `spike`), quanto de forma a simular a execução em um processador real, descrito em `Verilog`.
 
+#### *Setup* Inicial do Repositório
+
+A documentação do *framework* apresenta uma [descrição](https://chipyard.readthedocs.io/en/latest/Chipyard-Basics/Initial-Repo-Setup.html) detalhada do processo de *setup*. 
+De forma resumida, o *setup* é feito através de três passos:
+
+1. Pré-requisitos:  [`conda`](https://github.com/conda-forge/miniforge/#download) e `git`; 
+
+    OBS.: se durante a instalação do `conda` você escolher não ativá-lo sempre ao abrir o terminal, garanta que ele esteja ativo nos próximos passos.
+    ```bash
+    conda activate base
+    ```
+
+2. Configurando o repositório: após fazer o *clone* e *checkout* na última *release* do repositório é preciso executar o script que vai de fato realizar o *setup*. 
+    ```bash
+    git clone https://github.com/ucb-bar/chipyard.git
+    cd chipyard
+    # checkout latest official chipyard release
+    # note: this may not be the latest release if the documentation version != "stable"
+    git checkout main    
+    ```
+    O *script* tem 11 etapas, de forma que é possível pular alguma (caso não utilize a *feature* construída naquela etapa).
+    ```bash
+    ./build-setup.sh riscv-tools -s 6 -s 7 -s 8 -s 9
+    ```
+    Sugiro pular estas etapas caso não vá utilizar `FireSim`.
+
+3. *Sourcing* do `env.sh`: após o *setup* o arquivo `env.sh` ficará disponível no diretório base. 
+    Ele tem como função ativar o ambiente `conda` e configurar as variáveis de ambiente para as etapas futuras.
+    É necessário fazer o `source` toda vez antes de fazer algum `make` dentro do repositório.
+    ```bash
+    source ./env.sh
+    ```
+
+Com todos os passos concluídos, é possível explorar de forma efetiva o repositório.
+
 -----
 
 ### Litex
