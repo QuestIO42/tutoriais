@@ -66,6 +66,175 @@ Se você quer se aprofundar na construção de um processador RISC-V, sugerimos 
 
 ### Chipyard
 
+Chipyard é um *framework* para projetar e avaliar *hardware* de sistemas completos. É composto por uma coleção de ferramentas e bibliotecas projetadas para fornecer 
+integração entre ferramentas de código aberto e comerciais para o desenvolvimento de *systems-on-chip*. O projeto tem uma [página dedicada](https://chipyard.readthedocs.io/en/latest/) à documentação, com guias e informações mais detalhadas do [repositório](https://github.com/ucb-bar/chipyard).
+
+O *framework* junta diversos projetos abertos chamados geradores RTL, responsáveis por gerar descrições RTL (*Register-Transfer Level*), escritas na linguagem `Verilog`. A geração de `Verilog`, como é comumente chamada, começa com código em `Scala` e, após uma cadeia de processos, acaba com o arquivo `Verilog`.
+Esta cadeia de processos utiliza algumas ferramentas, principalmente o `Chisel`, uma biblioteca para descrição de *hardware* incorporada em `Scala`; e o `FIRRTL`, uma biblioteca de representação intermediária para descrição RTL de projetos digitais.
+De forma resumida, o gerador RTL é escrito em `Scala` com o uso da biblioteca `Chisel`, o compilador `Chisel` transforma o gerador em uma saída `FIRRTL`, que por sua vez permite a manipulação de circuitos digitais para a geração do `Verilog`.
+
+Além dos tópicos estritamente relacionados à geração de `Verilog`, o *framework* também possui ferramentas para simulação, compilação e teste de códigos. 
+Dentre estas ferramentas, existe o repositório *riscv-tools*, uma coleção de cadeias de ferramentas de software usadas para desenvolver e executar *software* no ISA RISC-V.
+Na parte da simulação de `Verilog`, a principal ferramenta aberta utilizada é o `Verilator`. O *framework* fornece *wrappers* que constroem simuladores baseados no `Verilator` a partir de RTL gerado, permitindo a execução de programas RISC-V no simulador.
+Assim, é possível montar, compilar e testar programas para o ISA do RISC-V, tanto de forma a verificar o funcionamento do programa isolado (e.g. com simuladores de ISA, como `spike`), quanto de forma a simular a execução em um processador real, descrito em `Verilog`.
+
+#### *Setup* Inicial do Repositório
+
+A documentação do *framework* apresenta uma [descrição](https://chipyard.readthedocs.io/en/latest/Chipyard-Basics/Initial-Repo-Setup.html) detalhada do processo de *setup*. 
+De forma resumida, o *setup* é feito através de três passos:
+
+1. Pré-requisitos:  [`conda`](https://github.com/conda-forge/miniforge/#download) e `git`; 
+
+    OBS.: se durante a instalação do `conda` você escolher não ativá-lo sempre ao abrir o terminal, garanta que ele esteja ativo nos próximos passos.
+    ```bash
+    conda activate base
+    ```
+
+2. Configurando o repositório: após fazer o *clone* e *checkout* na última *release* do repositório é preciso executar o script que vai de fato realizar o *setup*. 
+    ```bash
+    git clone https://github.com/ucb-bar/chipyard.git
+    cd chipyard
+    # checkout latest official chipyard release
+    # note: this may not be the latest release if the documentation version != "stable"
+    git checkout main    
+    ```
+    O *script* tem 11 etapas, de forma que é possível pular alguma (caso não utilize a *feature* construída naquela etapa).
+    ```bash
+    ./build-setup.sh riscv-tools -s 6 -s 7 -s 8 -s 9
+    ```
+    Sugiro pular estas etapas caso não vá utilizar `FireSim`.
+
+3. *Sourcing* do `env.sh`: após o *setup* o arquivo `env.sh` ficará disponível no diretório base. 
+    Ele tem como função ativar o ambiente `conda` e configurar as variáveis de ambiente para as etapas futuras.
+    É necessário fazer o `source` toda vez antes de fazer algum `make` dentro do repositório.
+    ```bash
+    source ./env.sh
+    ```
+
+Com todos os passos concluídos, é possível explorar de forma efetiva o repositório.
+
+#### Simulação de Códigos RISC-V
+
+A simulação da ISA é feita principalmente pela ferramenta `spike`, dentro do ambiente `conda` temos:
+
+```bash
+$ spike -h
+Spike RISC-V ISA Simulator 1.1.1-dev
+
+usage: spike [host options] <target program> [target options]
+Host Options:
+...
+```
+
+tente executar e ler todas as `Host Options`, pois existem diversas configurações úteis que podem servir como solução para um futuro problema.
+
+Para simular é preciso antes ter algum código, tomemos como exemplo um "`hello, world!`" simples em `C`:
+```c
+#include <stdio.h>
+
+int main(){
+    printf("Hello, World!\n");
+    return 0;
+}
+```
+
+Utilizando o `gcc` é possível compilar e executá-lo, assim:
+
+```bash
+$ gcc hello.c -o hello && file hello && ./hello 
+hello: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, not stripped
+Hello, World!
+```
+
+Porém, vemos que a ISA utilizada é diferente daquela que desejamos, RISC-V. Assim, de forma a compilar um código para RISC-V é necessário utilizar a `toolchain` específica:
+
+```bash
+$ riscv64-unknown-elf-gcc hello.c -o hello && file hello && ./hello 
+hello: ELF 64-bit LSB executable, UCB RISC-V, version 1 (SYSV), statically linked, not stripped
+bash: ./hello: cannot execute binary file: Exec format error
+```
+
+Agora o arquivo foi compilado na arquitetura `UCB RISC-V` como desejado, porém não foi possível executá-lo localmente, já que esta máquina possui outra arquitetura. Finalmente é hora de utilizar o `spike`, de forma a simular a execução do código `RISC-V`.
+
+```bash
+$ spike hello
+Access exception occurred while loading payload hello:
+Memory address 0x125e0 is invalid
+```
+
+Existe ainda um problema nesta simulação, só é possível executar um binário direto com o `spike` caso ele seja `baremetal`, caso contrário, é necessário utilizar outra ferramenta, o `proxy kernel` ou `pk`.
+
+```bash
+$ spike pk hello
+Hello, World!
+```
+
+Agora, é possível criar códigos em C, compilá-los para a arquitetura alvo desejada e simular a execução dos binários.
+
+##### Compilando Binários *Bare Metal*
+
+Existe um diretório na raiz do repositório, chamado `tests`, que permite a criação de binários *baremetal* a partir de códigos em `C`. O processo é feito por `cmake`, e o arquivo `CMakeLists.txt` traz a configuração do mesmo, além de uma documentação simples de uso:
+
+```bash
+# file:  CMakeLists.txt
+#
+# usage: 
+#   Edit "VARIABLES"-section to suit project requirements.
+#   Build instructions:
+#     cmake -S ./ -B ./build/ -D CMAKE_BUILD_TYPE=Debug
+#     cmake --build ./build/ --target all
+#   Cleaning:
+#     cmake --build ./build/ --target clean
+```
+
+Com o intuito de demonstrar como adicionar algum código nesta lista, vou utilizar o mesmo codigo em `C` de anteriormente, porém com o nome `my_hello.c`. Primeiro, é preciso adicionar o executável no `CMakeLists.txt`, através do comando `add_executable()`:
+
+```bash
+add_executable(my_hello my_hello.c)
+```
+Agora, com o arquivo dentro do diretório e configurado dentro do `CMakeLists`, basta seguir os passos de uso do `cmake`:
+
+```bash
+$ cmake -S ./ -B ./build/ -D CMAKE_BUILD_TYPE=Debug && cmake --build ./build/ --target all
+```
+
+Com todos os binários prontos, é possível utilizar o `spike` para simular a execução do binário *baremetal*:
+
+```bash
+$ spike build/my_hello.riscv 
+Hello, World!
+```
+
+#### Simulação com `Verilator`:
+
+`Verilator` é um simulador *open-source* de `Verilog`, utilizado no repositório como uma das ferramentas de simulação. Utilizaremos esta ferramenta pelo fato de ser aberta e por muitas partes estarem prontas.
+O diretório `sims/verilator` fornece *wrappers* que constroem simuladores a partir do RTL gerado, permitindo a execução de programas RISC-V no simulador.
+
+Dentro do diretório, apenas um `make` já constrói um simulador completo. A configuração padrão é a `RocketConfig`, que constrõe o SoC com o processador `Rocket`, um processador escalar de execução em ordem com 5 estágios. 
+
+```bash
+$ cd sims/verilator
+make
+```
+
+Após a execução de todas as etapas do `make`, um executável chamado `simulator-chipyard.harness-RocketConfig` será produzido. Este executável é o simulador compilado com base no projeto criado. Você pode então usar este executável para executar qualquer código compatível com RV64 (RISC-V de 64 bits).
+
+O arquivo `Makefile` possui várias regras que auxiliam o uso do executável, mas é possível utilizá-lo diretamente, passando apenas o binário como parâmetro.
+
+```bash
+$ ./simulator-chipyard.harness-RocketConfig $BASE/tests/build/my_hello.riscv
+[UART] UART0 is here (stdin/stdout).
+Hello, World!
+```
+
+Dentro de todas as regras, `run-binary` auxilia a utilização de várias opções dentro da simulação. Além de não ser necessário inserir o nome do executável, é possível selecionar a configuração, o binário, o carregamento de memória, etc.
+
+```bash
+$ make run-binary CONFIG=RocketConfig BINARY=$BASE/tests/build/my_hello.riscv LOADMEM=1
+```
+
+-----
+
 ### Litex
 
 O framework LiteX fornece uma infraestrutura integrada para criar SoCs e integrar periféricos. Sendo capaz de criar sistemas completos baseados em FPGA.
