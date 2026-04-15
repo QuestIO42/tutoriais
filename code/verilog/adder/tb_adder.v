@@ -5,6 +5,9 @@ module tb_adder;
   adder uut (.a(a), .b(b), .sum(sum));
 
   initial begin
+    $dumpvars;
+    $display("Time\t a\t b\t sum");
+    $monitor("%3t\t%d\t%d\t%3d", $time, a, b, sum);
     a = 4'd3; b = 4'd2;
     #10 a = 4'd7; b = 4'd8;
     #10 $finish;
