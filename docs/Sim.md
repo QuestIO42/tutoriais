@@ -83,7 +83,7 @@ tb_adder.v:12: $finish called at 20 (1s)
 
 Embora a saída na console possa ser útil em alguns casos, podemos gerar também um arquivo do forma de onda (_waveform_) .VCD para explorar a simulação visualmente. Para isso, vamos incluir a função `$dumpvars`, que resulta na geração deste arquivo. Ele pode ser aberto usando um leitor como o [GTKWave](https://gtkwave.github.io/gtkwave/) ou extensões do VSCode como [WaveTrace](https://marketplace.visualstudio.com/items?itemName=wavetrace.wavetrace) ou [surfer](https://marketplace.visualstudio.com/items?itemName=surfer-project.surfer).
 
-![surger.png](../img/surfer.png)
+![surfer.png](img/surfer.png)
 
 Para conhecer técnicas mais avançadas de simulação e testes, assista a esta [sequência de vídeos](https://www.youtube.com/playlist?list=PLhaFCmjMNuYZCoXbLDGi4-gqSBaKaEMsV) sobre o assunto. 
 
