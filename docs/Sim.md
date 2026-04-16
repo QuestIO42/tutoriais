@@ -89,3 +89,48 @@ Para conhecer técnicas mais avançadas de simulação e testes, assista a esta 
 
 ## Verilator
 
+O [Verilator](https://www.veripool.org/verilator/) é o simulador de Verilog de código aberto mais rápido disponível atualmente. Diferente dos simuladores tradicionais "baseados em eventos" (como o ModelSim ou Icarus Verilog), o Verilator atua como um compilador que converte o hardware em modelos comportamentais de C/C++ altamente otimizados.
+
+No exemplo a seguir, criamos um teste para estimular nosso somador com 10 pares de números aleatórios entre 0 e 15:
+
+```c
+#include <stdlib.h>
+#include <iostream>
+#include "verilated_vcd_c.h"
+#include "verilated.h"
+#include "Vadder.h"
+
+int main(int argc, char **argv) {
+    Vadder *dut = new Vadder;
+    Verilated::traceEverOn(true);
+    VerilatedVcdC *m_trace = new VerilatedVcdC;
+    dut->trace(m_trace, 0);
+    m_trace->open("dump.vcd");    
+    for (int i = 0; i < 10; i++) {
+        dut->a = rand() % 16;
+        dut->b = rand() % 16;
+        dut->eval();
+        m_trace->dump(i);
+    }
+    m_trace->close();
+    delete dut;
+    return 0;
+}
+```
+
+No exemplo a seguir transformamos o arquivo `adder.v` em C/C++, o compilamos junto com o teste criado e o executamos para gerar o diagrama de forma de ondas.
+
+```zsh
+ % verilator -Wall --trace -cc adder.v --exe --build tb_adder.cpp && obj_dir/Vadder 
+make: Entering directory '/srv/QuestIO42/tutoriais/code/verilog/adder/obj_dir'
+g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -DVM_TRACE_SAIF=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -Os  -c -o tb_adder.o ../tb_adder.cpp
+g++    tb_adder.o verilated.o verilated_vcd_c.o verilated_threads.o Vadder__ALL.a    -pthread -lpthread -latomic   -o Vadder
+make: Leaving directory '/srv/QuestIO42/tutoriais/code/verilog/adder/obj_dir'
+- V e r i l a t i o n   R e p o r t: Verilator 5.043 devel rev v5.042-27-geafad9742
+- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 0.699 s (elab=0.000, cvt=0.000, bld=0.698); cpu 0.001 s on 1 threads; alloced 19.203 MB
+```
+
+Como boa parte do código Verilog escrito nos _test benchs_ não é sintetizável, não faz diferença e pode até ser mais útil escrevê-lo em uma linguagem de programação, dependendo dos objetivos dos testes. Abaixo a simulação com as entradas aleatórias geradas via software. 
+
+![surfer_rand.png](img/surfer_rand.png)
