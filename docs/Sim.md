@@ -134,3 +134,82 @@ make: Leaving directory '/srv/QuestIO42/tutoriais/code/verilog/adder/obj_dir'
 Como boa parte do código Verilog escrito nos _test benchs_ não é sintetizável, não faz diferença e pode até ser mais útil escrevê-lo em uma linguagem de programação, dependendo dos objetivos dos testes. Abaixo a simulação com as entradas aleatórias geradas via software. 
 
 ![surfer_rand.png](img/surfer_rand.png)
+
+## Cocotb
+
+[cocotb](https://www.cocotb.org/) (COroutine-based COsimulation TestBench) é uma ferramenta de código aberto usada para verificar designs de hardware (RTL) utilizando Python em vez das tradicionais linguagens de verificação como Verilog ou VHDL. Diferente das abordagens tradicionais onde o testbench roda inteiramente dentro do simulador, o cocotb conecta o interpretador Python ao simulador através de interfaces padrão como VPI (Verilog Procedural Interface), VHPI ou FLI. Isso permite que você escreva a lógica do teste em Python enquanto o simulador processa o código HDL.
+
+O exemplo a seguir foi [adaptado do projeto original](https://github.com/cocotb/cocotb/tree/master/examples/adder) para testar o nosso já conhecido somador. Primeiro descrevemos um **golden model** em Python para o nosso somador:
+
+```python
+def adder_model(a: int, b: int) -> int:
+    """model of adder"""
+    return a + b
+```
+
+Depois escrevemos os testes propriamente ditos. O primeiro testa o somador com os valores 6 e 10 fixos:
+
+```python
+@cocotb.test()
+async def adder_basic_test(dut):
+    """Test for 6 + 10"""
+    A = 6
+    B = 10
+    dut.a.value = A
+    dut.b.value = B
+    await Timer(2, unit="ns")
+    assert dut.sum.value == adder_model(A, B), (
+        f"Adder result is incorrect: {dut.sum.value} != {adder_model(A, B)}"
+    )
+```
+
+O segundo teste injeta 10 pares de números aleatórios:
+
+```python
+@cocotb.test()
+async def adder_randomised_test(dut):
+    """Test for adding 2 random numbers multiple times"""
+    for _ in range(10):
+        A = random.randint(0, 15)
+        B = random.randint(0, 15)
+        dut.a.value = A
+        dut.b.value = B
+        await Timer(2, unit="ns")
+        assert dut.sum.value == adder_model(A, B), (
+            f"Randomised test failed with: {dut.a.value} + {dut.b.value} = {dut.sum.value} != {adder_model(A, B)}"
+        )
+```
+
+A partir de um Makefile, a ferramenta invoca o simulador e roda todos os testes comparando automaticamente os resultados: 
+
+```zsh
+ % make
+rm -f results.xml
+"make" -f Makefile results.xml
+make[1]: Entering directory '/srv/QuestIO42/tutoriais/code/python/adder/tests'
+/usr/local/bin/iverilog -o sim_build/sim.vvp -s adder -g2012 -f sim_build/cmds.f -s cocotb_iverilog_dump  /srv/QuestIO42/tutoriais/code/python/adder/tests/../../../verilog/adder/adder.v sim_build/cocotb_iverilog_dump.v
+rm -f results.xml
+COCOTB_TEST_MODULES=test_adder COCOTB_TESTCASE= COCOTB_TEST_FILTER= COCOTB_TOPLEVEL=adder TOPLEVEL_LANG=verilog \
+         /usr/local/bin/vvp -M /home/menotti/.local/lib/python3.12/site-packages/cocotb/libs -m libcocotbvpi_icarus   sim_build/sim.vvp -fst  
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:93   in _embed_init_python              Using Python 3.12.4 interpreter at /usr/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:79   in gpi_print_registered_impl       VPI registered
+     0.00ns INFO     cocotb                             Running on Icarus Verilog version 13.0 (devel)
+     0.00ns INFO     cocotb                             Seeding Python random module with 1776432540
+     0.00ns INFO     cocotb                             Initialized cocotb v2.0.1 from /home/menotti/.local/lib/python3.12/site-packages/cocotb
+     0.00ns INFO     cocotb                             Running tests
+     0.00ns INFO     cocotb.regression                  running test_adder.adder_basic_test (1/2)
+                                                            Test for 6 + 10
+FST info: dumpfile sim_build/adder.fst opened for output.
+     2.00ns INFO     cocotb.regression                  test_adder.adder_basic_test passed
+     2.00ns INFO     cocotb.regression                  running test_adder.adder_randomised_test (2/2)
+                                                            Test for adding 2 random numbers multiple times
+    22.00ns INFO     cocotb.regression                  test_adder.adder_randomised_test passed
+    22.00ns INFO     cocotb.regression                  ******************************************************************************************
+                                                        ** TEST                              STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        ******************************************************************************************
+                                                        ** test_adder.adder_basic_test        PASS           2.00           0.00       2660.52  **
+                                                        ** test_adder.adder_randomised_test   PASS          20.00           0.00      50472.97  **
+                                                        ******************************************************************************************
+                                                        ** TESTS=2 PASS=2 FAIL=0 SKIP=0                     22.00           0.00      10002.05  **
+                                                        ******************************************************************************************
+```
