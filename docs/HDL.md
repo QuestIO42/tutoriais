@@ -56,6 +56,7 @@ Em Verilog há três formas diferentes de se especificar hardware, cada uma dela
 !!! warning
     O importante é entender que todas essas formas são apenas diferentes maneiras de descrever o mesmo hardware. O Verilog sintetizável é aquele que pode ser convertido em um circuito físico por ferramentas de síntese, independentemente da forma usada para descrevê-lo. A escolha da forma depende do nível de abstração desejado e da clareza do código, mas é importante endender que nenhuma delas é um programa a ser executado, mas sim a descrição de um circuito a ser implementado em hardware.
 
+Esta é apenas uma visão geral da linguagem, se você deseja aprender sua sintaxe e saber como usá-la para geração de circuitos típicos, veja este [curso completo de Verilog](https://www.youtube.com/playlist?list=PLhaFCmjMNuYZ542h5JCDsUDxsgZbWtFTI). Aprenda também como usar algumas [ferramentas para simulação de Verilog](../Sim/). 
 
 [^1]: *Hardware Description Language* 
 
