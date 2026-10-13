@@ -214,26 +214,21 @@ FST info: dumpfile sim_build/adder.fst opened for output.
                                                         ******************************************************************************************
 ```
 
+## WSL
 
-
-
-
-
-# Tutorial WSL
-
-Siga os passos a seguir para entregar as tarefas da disciplina usando o _Windows Subsystem for Linux_ (WSL). 
+A maioria das ferramentas _open source_ para desenvolvimento de hardware rodam no Linux, mas é possível executá-las usando o _Windows Subsystem for Linux_ (WSL). 
 
 > A documentação completa está [disponível aqui](https://code.visualstudio.com/docs/remote/wsl-tutorial), mas alguns passos requerem permissão de administrador. 
 
-## Extensão WSL no VS Code
+### Extensão WSL no VS Code
 
 Procure e instale a [extensão WSL para o VS Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl). 
 
-## Abrir um terminal WSL
+### Abrir um terminal WSL
 
 No meu iniciar, digite `WSL` ou pressione ⊞+R para executar o mesmo comando. 
 
-## Testando a ligação entre VS Code e WSL
+### Testando a ligação entre VS Code e WSL
 
 Para verificar se as instalações estão corretas, abra um terminal WSL e digite `code .` na pasta desejada, o VS Code deve abrir. O sistema de arquivos do Windows é montado em `/mnt/c/`.
 
@@ -244,16 +239,16 @@ root@CP-DK-214591:/mnt/c/Users/705990/Workspace/classroom50# uname
 Linux
 ```
 
-## Pacotes úteis para a disciplina
+### Pacotes úteis para as disciplinas de hardware
 
 No terminal Linux, use o comando a seguir para instalar pacotes relevantes para a disciplina:
 
 ```
 apt update
-apt install gh iverilog gtkwave gcc-riscv64-linux-gnu gcc-riscv64-unknown-elf qemu-user-static
+apt install gh iverilog gtkwave make gcc-riscv64-linux-gnu gcc-riscv64-unknown-elf qemu-user-static
 ```
 
-## Acessando os repositórios da disciplina
+### Acessando os repositórios das disciplinas
 
 Os repositórios da disciplina são privados e ficam dentro da organização [DC-UFSCar no GitHub](https://github.com/DC-UFSCar). Cada estudante só tem acesso aos seus repositórios individuais e os de seu grupo. 
 
