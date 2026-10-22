@@ -230,12 +230,12 @@ No meu iniciar, digite `WSL` ou pressione ⊞+R para executar o mesmo comando.
 
 ### Testando a ligação entre VS Code e WSL
 
-Para verificar se as instalações estão corretas, abra um terminal WSL e digite `code .` na pasta desejada, o VS Code deve abrir. O sistema de arquivos do Windows é montado em `/mnt/c/`.
+Para verificar se as instalações estão corretas, abra um terminal WSL e digite `code .` na pasta desejada, o VS Code deve abrir. O sistema de arquivos do Windows é montado em `/mnt/c/` e lá você pode encontrar sua área de usuário (observe o caminho na saída abaixo).
 
 No VS Code, clique em **Terminal** e depois em **New Terminal** ou digite `Ctrl+Shift+'`. No terminal digite `uname` para verificar se se trata de um terminal **Linux**. 
 
 ```
-root@CP-DK-214591:/mnt/c/Users/705990/Workspace/classroom50# uname
+root@CP-DK-214591:/mnt/c/Users/705990/Downloads/ld# uname
 Linux
 ```
 
