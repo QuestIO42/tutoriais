@@ -69,3 +69,32 @@ A seguir estão alguns dos kits disponíveis em nosso grupo, mas fique à vontad
 ### [Zybo Z7-20 (Xilinx)](https://digilent.com/reference/programmable-logic/zybo-z7/start)
 
 ### [Alinx AX7350B (Xilinx)](https://www.en.alinx.com/Product/SoC-development-Boards/Zynq-7000-SoC/AX7350B.html)
+
+A ALINX AX7350B é uma placa de desenvolvimento baseada no Xilinx Zynq-7000 XC7Z035, que reúne um processador ARM Cortex-A9 de dois núcleos e uma FPGA no mesmo chip. 
+Essa combinação permite desenvolver software no sistema de processamento (PS) e circuitos digitais na lógica programável (PL). 
+A placa oferece recursos como memória DDR3, Ethernet, HDMI e interfaces de expansão, permitindo explorar desde exemplos com LEDs até projetos de processamento de dados e comunicação. 
+
+A tabela apresenta alguns dos principais recursos, conforme o 
+[datasheet do XC7Z035](https://docs.amd.com/api/khub/documents/juMnxca71Tf2gfjmNyjM8A/content) e as 
+[especificações da placa](https://www.en.alinx.com/Product/SoC-development-Boards/Zynq-7000-SoC/AX7350B.html):
+
+| Recurso | Especificação |
+| --- | --- |
+| Dispositivo | Xilinx Zynq-7000 XC7Z035 |
+| Processador | ARM Cortex-A9 de dois núcleos, até 800 MHz |
+| Células lógicas programáveis | 275.000 |
+| LUTs | 171.900 |
+| Registradores da PL — flip-flops | 343.800 |
+| Memória interna da PL — Block RAM | 17,6 Mbit, distribuídos em 500 blocos |
+| Blocos DSP — operações aritméticas | 900 |
+| Memória DDR3 da placa | 2 GB: 1 GB conectado ao PS e 1 GB à PL |
+| Armazenamento eMMC | 8 GB |
+| Memória QSPI Flash | 32 MB |
+| Oscilador para a lógica da PL | 50 MHz |
+
+Para começar a desenvolver projetos para a **ALINX AX7350B**, utilize o [vivado-tcl-template](https://github.com/arruk/vivado-tcl-template), disponível no GitHub. 
+Ele oferece uma estrutura inicial com um exemplo de controle dos LEDs da placa e comandos de terminal que facilitam a compilação e a programação da FPGA. 
+O projeto também pode ser aberto na interface gráfica do Vivado.
+
+O repositório funciona como um **template**: você pode criar seu próprio repositório a partir dele e adaptar os arquivos para desenvolver um novo projeto. 
+Consulte o **README** para conhecer os requisitos, preparar o ambiente e entender como compilar, programar a placa e modificar o exemplo. 
