@@ -44,20 +44,28 @@ O projeto é especificado geralmente em uma HDL, por exemplo, Verilog. Se a ***s
 
 ## Ferramentas de síntese
 
-### Quartus
+Em geral, os kits de FPGAs requerem o uso das ferramentas próprias do fabricante descritas a seguir. Alguns poucos dispositivos permitem o uso de ferramentas FOSS, descritas na [última subseção](#yosys).
 
-### Vivado
+### [Quartus](https://www.altera.com/products/software-tools/quartus-prime)
 
-### Yosys
+[Template](https://github.com/menotti/ld/) para usar com linha de comandos. 
+
+### [Vivado](https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vivado.html)
+
+[Template](https://github.com/arruk/vivado-tcl-template) para usar com linha de comandos. 
+
+### [Yosys](https://yosyshq.net/yosys/)
 
 ## Kits de FPGAs
 
 A seguir estão alguns dos kits disponíveis em nosso grupo, mas fique à vontade para adicionar outros. 
 
-### DE0-CV (Altera)
+### [DE0-CV (Altera)](https://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=163&No=921)
 
-### DE10-standard (Altera)
+### [DE10-standard (Altera)](https://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=165&No=1081)
 
-### Tang Primer 20k (Sipeed/Gowin)
+### [Tang Primer 20k (Sipeed/Gowin)](https://wiki.sipeed.com/hardware/en/tang/tang-primer-20k/primer-20k.html)
 
-### Zybo Z7-20 (Xilinx)
+### [Zybo Z7-20 (Xilinx)](https://digilent.com/reference/programmable-logic/zybo-z7/start)
+
+### [Alinx AX7350B (Xilinx)](https://www.en.alinx.com/Product/SoC-development-Boards/Zynq-7000-SoC/AX7350B.html)
